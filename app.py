@@ -30,9 +30,6 @@ class App(ShowBase, object):
 	def launchWorld(self, name):
 		if self.__worldLoaders[name] is not None :
 			self.__currentWorldLoader.launch()
-			self.scene = self.loader.loadModel("/home/law/Documents/tests/PD2/1")
-			self.scene.reparentTo(self.render)
-			self.scene.setPos(0, 0, 0)
 			print "launched"
 		
 
