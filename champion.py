@@ -20,7 +20,7 @@ class Champion(DirectObject.DirectObject, Wrapper):
 
 	def load(self):
 		print "loading body"
-		self.body = base.loader.loadModel("models/teapot")
+		self.body = base.loader.loadModel("teapot")
 		self.__ax = 2
 		self.__ay = 3
 		self.body.setPos(self.__ax, self.__ay, 0)
