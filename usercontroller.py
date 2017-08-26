@@ -12,7 +12,7 @@ from panda3d.core import KeyboardButton
 #use to control movements of an object and camera on it
 class UserController(DirectObject.DirectObject, object):
 
-	def __init__(self, body, camera):
+	def __init__(self, target, camera):
 
 		#position de depart
 		self.__x = 2
@@ -28,15 +28,15 @@ class UserController(DirectObject.DirectObject, object):
 		self.speed = 0.05
 		self.rotSpeed = 1.0
 
-		#body and cam
-		self.body = body
+		#target and cam
+		self.target = target
 		self.camera = camera
 
 		try: 
-			self.body.getScale()
-			self.camera.reparentTo(self.body)
+			self.target.setPos(self.__x, self.__y, 100)
+			self.camera.reparentTo(self.target)
 		except Exception as e:
-			print "---> Exception! in __init__ user controller, maybe body or camera is None?"
+			print "---> Exception! in __init__ user controller, maybe target or camera is None?"
 			print str(e)
 			exit()
 
@@ -52,7 +52,7 @@ class UserController(DirectObject.DirectObject, object):
 		
 	def taskOnEachFrame(self, task):
 		self.__controlMove()
-		self.body.setPos(self.__x, self.__y, 0)
+		self.target.setPos(self.__x, self.__y, self.target.getZ())
                 return Task.cont
 
         def __controlMove(self):
@@ -61,24 +61,24 @@ class UserController(DirectObject.DirectObject, object):
 
 		#si 'droite' est presse
                 if pressedKey(self.rotRightKey) :
-			point = self.body.getHpr()
+			point = self.target.getHpr()
 			point.addX(-self.rotSpeed)
-			self.body.setHpr(point)
+			self.target.setHpr(point)
 		
 		#si 'gauche' est presse
                 if pressedKey(self.rotLeftKey) :
-			point = self.body.getHpr()
+			point = self.target.getHpr()
 			point.addX(self.rotSpeed)
-			self.body.setHpr(point)
+			self.target.setHpr(point)
 
 		#si 'avant' est presse
                 if pressedKey(self.forwardKey) :
-			angle = self.body.getHpr().getX() * (pi / 180.0)
+			angle = self.target.getHpr().getX() * (pi / 180.0)
 			self.__x -= self.speed * sin(angle)
 			self.__y += self.speed * cos(angle)
 
 		#si 'arriere' est presse
                 if pressedKey(self.backwardKey) :
-			angle = self.body.getHpr().getX() * (pi / 180.0)
+			angle = self.target.getHpr().getX() * (pi / 180.0)
 			self.__x += self.speed * sin(angle)
 			self.__y -= self.speed * cos(angle)

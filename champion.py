@@ -4,6 +4,9 @@ import app
 from direct.showbase import DirectObject
 from direct.task import Task
 from panda3d.core import LPoint3f
+from panda3d.core import NodePath
+from panda3d.physics import ActorNode
+from panda3d.physics import ForceNode
 from wrapper import Wrapper
 
 from panda3d.core import KeyboardButton
@@ -20,11 +23,20 @@ class Champion(DirectObject.DirectObject, Wrapper):
 
 	def load(self):
 		print "loading body"
+
+		self.nodePath = NodePath("champion_base_node_path")
+
+		#for physics
+		self.actorNode = ActorNode("champion_physics_node")
+		self.actorNodePath = self.nodePath.attachNewNode(self.actorNode)
+		base.physicsMgr.attachPhysicalNode(self.actorNode)
+
 		self.body = base.loader.loadModel("teapot")
-		self.__ax = 2
-		self.__ay = 3
-		self.body.setPos(self.__ax, self.__ay, 0)
 		self.body.setScale(0.5,0.5,0.5)
+
+		#make the physics node path parent of body
+		self.body.reparentTo(self.actorNodePath) 
+
 		print "loaded body"
 
 	def unload(self):
@@ -35,8 +47,19 @@ class Champion(DirectObject.DirectObject, Wrapper):
 		self.ignoreAll()
 
 	def launch(self):
-		print "lauching body"
-		self.body.reparentTo(base.render)
+		if self.controller is not None:
+			print "lauching champion"
+			self.nodePath.reparentTo(base.render)
+		else:
+			print "can't launch: controller missing"
 		
-		self.controller = UserController(self.body, base.camera)
-	
+	def setControllerType(self, name):
+		self.controller = None
+		if name == "user_controller":
+			self.controller = UserController(target=self.actorNodePath, camera=base.camera)
+		elif name == "net_controller":
+			#in the future : controller from internet here
+			#self.controller = NetController(...)
+			pass
+		else:
+			pass

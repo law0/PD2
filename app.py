@@ -10,7 +10,12 @@ class App(ShowBase, object):
 	
 	def __init__(self):
 		ShowBase.__init__(self)
+
+		#few import init:
+		#disable cam control by mouse
 		self.disableMouse()
+		#enable physics
+		base.enableParticles()
 		
 		self.__currentWorldLoader = None
 		self.__worldLoaders = {}	
