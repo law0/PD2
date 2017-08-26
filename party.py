@@ -12,8 +12,14 @@ class PartyWorld(DirectObject.DirectObject, Wrapper):
 	
 	def load(self):
 		print "loading world"
-		self.world = base.loader.loadModel("1")
-		self.world.setPos(0, 0, 0)
+
+		self.map = base.loader.loadModel("1")
+		self.map.setPos(0, 0, 0)
+
+		self.skybox = base.loader.loadModel("skybox")
+		self.skybox.set_two_sided(True)
+		self.skybox.setPos(0, 0, 0)		
+
 		self.champion = Champion()
 		self.champion.load()
 		print "loaded world"
@@ -21,12 +27,15 @@ class PartyWorld(DirectObject.DirectObject, Wrapper):
 	def unload(self):
 		print "unloading world"
 		self.champion.unload()
-		self.world.removeNode()
-		base.loader.unloadModel(self.world)
-		self.world = None
+		self.map.removeNode()
+		self.skybox.removeNode()
+		base.loader.unloadModel(self.map)
+		base.loader.unloadModel(self.skybox)
+		self.map = None
 
 	def launch(self):
 		print "lauching world"
-		self.world.reparentTo(base.render)
+		self.map.reparentTo(base.render)
+		self.skybox.reparentTo(base.render)
 		self.champion.launch()
  
