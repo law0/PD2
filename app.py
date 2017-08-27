@@ -6,6 +6,8 @@ from direct.showbase.ShowBase import ShowBase
 from party import PartyWorld
 from champion import Champion
 
+from panda3d.core import CollisionTraverser
+
 class App(ShowBase, object):
 	
 	def __init__(self):
@@ -14,8 +16,6 @@ class App(ShowBase, object):
 		#few import init:
 		#disable cam control by mouse
 		self.disableMouse()
-		#enable physics
-		base.enableParticles()
 		
 		self.__currentWorldLoader = None
 		self.__worldLoaders = {}	

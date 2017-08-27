@@ -6,6 +6,10 @@ import app
 from direct.showbase import DirectObject
 from direct.task import Task
 from panda3d.core import LPoint3f
+from panda3d.core import NodePath
+from panda3d.physics import ActorNode
+from panda3d.physics import ForceNode
+from panda3d.physics import LinearVectorForce
 
 from panda3d.core import KeyboardButton
 
@@ -33,16 +37,27 @@ class UserController(DirectObject.DirectObject, object):
 		self.camera = camera
 
 		try: 
-			self.target.setPos(self.__x, self.__y, 100)
+			self.target.setPos(self.__x, self.__y, 10)
 			self.camera.reparentTo(self.target)
 		except Exception as e:
 			print "---> Exception! in __init__ user controller, maybe target or camera is None?"
 			print str(e)
 			exit()
 
+		self.jumpNode = NodePath("jump")
+		self.jumpNode.reparentTo(self.target)
+		self.jumpNode.setPos(0,0,0)
+
+                self.jumpForce = LinearVectorForce(0, 0, 300)
+                self.jumpForceNode = ForceNode("jumpNode")
+                self.jumpForceNode.addForce(self.jumpForce)
+                jumpNodePath = self.jumpNode.attachNewNode(self.jumpForceNode)
+
 		taskMgr.add(self.taskOnEachFrame, "taskOnEachFrame")
 		taskMgr.add(self.taskOnFirstFrame, "taskOnFirstFrame")
 
+		self.jumpStep = 0
+		self.accept('space', self.jump)
 
 	def taskOnFirstFrame(self, task):
 		self.camera.setPos(0, -20, 10)
@@ -53,6 +68,14 @@ class UserController(DirectObject.DirectObject, object):
 	def taskOnEachFrame(self, task):
 		self.__controlMove()
 		self.target.setPos(self.__x, self.__y, self.target.getZ())
+
+		if self.jumpStep == 1:
+			self.target.node().getPhysical(0).addLinearForce(self.jumpForce)
+			self.jumpStep = 2
+		elif self.jumpStep == 2:
+			self.target.node().getPhysical(0).removeLinearForce(self.jumpForce)
+			self.jumpStep = 0
+
                 return Task.cont
 
         def __controlMove(self):
@@ -82,3 +105,13 @@ class UserController(DirectObject.DirectObject, object):
 			angle = self.target.getHpr().getX() * (pi / 180.0)
 			self.__x += self.speed * sin(angle)
 			self.__y -= self.speed * cos(angle)
+
+	def resetPos(self):		
+		self.__x = 2
+		self.__y = 3
+		self.target.setPos(self.__x, self.__y, 10)
+
+
+        def jump(self):
+		self.jumpStep = 1
+
