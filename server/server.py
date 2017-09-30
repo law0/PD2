@@ -19,16 +19,15 @@ from time import sleep
 
 cManager = QueuedConnectionManager()
 cListener = QueuedConnectionListener(cManager, 0)
-cReader = QueuedConnectionReader(cManager, 0)
+tcpReader = QueuedConnectionReader(cManager, 0)
+udpReader = QueuedConnectionReader(cManager, 0)
 cWriter = ConnectionWriter(cManager,0)
 
 activeConnections=[] # We'll want to keep track of these later
 
-taskMgr = Task.TaskManager()
-
 end = True
 
-def tskListenerPolling(taskdata):
+def listenerPolling():
 	if cListener.newConnectionAvailable(): 
 		rendezvous = PointerToConnection()
 		netAddress = NetAddress()
@@ -36,19 +35,14 @@ def tskListenerPolling(taskdata):
 		if cListener.getNewConnection(rendezvous,netAddress,newConnection):
 			newConnection = newConnection.p()
 			activeConnections.append(newConnection) # Remember connection
-			cReader.addConnection(newConnection)    # Begin reading connection
-	c = Task.cont if end else Task.done
-	return c
+			tcpReader.addConnection(newConnection)    # Begin reading connection
 
 
-def tskReaderPolling(taskdata):
-	if cReader.dataAvailable():
+def readerPolling(reader):
+	if reader.dataAvailable():
 		datagram = NetDatagram()
-		if cReader.getData(datagram):
+		if reader.getData(datagram):
 			processDatagram(datagram)
-	c = Task.cont if end else Task.done
-	return c
-
 
 def processDatagram(data):
 	iterator = PyDatagramIterator(data)
@@ -59,12 +53,11 @@ def processDatagram(data):
 	if iterator.getUint8() == 1:
 		endItAll()
 
-
 def endItAll():
 	global activeConnections
 	global end
 	for aClient in activeConnections:
-		cReader.removeConnection(aClient)
+		tcpReader.removeConnection(aClient)
 
 	activeConnections=[]
 
@@ -79,14 +72,15 @@ def endItAll():
 port_address=9099 #No-other TCP/IP services are using this port
 backlog=1000 #If we ignore 1,000 connection attempts, something is wrong!
 tcpSocket = cManager.openTCPServerRendezvous(port_address,backlog)
+udpSocket = cManager.openUDPConnection(port_address + 1)
  
 cListener.addConnection(tcpSocket)
 
-#taskMgr.add(tskListenerPolling,"Poll the connection listener",-39)
-#taskMgr.add(tskReaderPolling,"Poll the connection reader",-40)
+udpReader.addConnection(udpSocket)
 
 while(end):
-	tskListenerPolling(None)
-	tskReaderPolling(None)
+	listenerPolling()
+	readerPolling(tcpReader)
+	readerPolling(udpReader)
 	sleep(0.05)
 

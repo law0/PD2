@@ -35,6 +35,21 @@ if myConnection:
 
 	datagram.clear()
 
+	udpSocket = cManager.openUDPConnection(9102)
+
+	netaddr = NetAddress()
+	netaddr.setHost(ip_address, port_address+1)
+
+	i = 0
+	while(i<10):
+		datagram.addString("udp")
+		datagram.addString("udp end")
+		datagram.addUint8(0)
+		cWriter.send(datagram, udpSocket, netaddr)
+		datagram.clear()
+		i=i+1
+
+
 	datagram.addString("2 Hello World!")
 	datagram.addString("2 and hello you <3")
 	datagram.addUint8(1)
