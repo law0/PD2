@@ -13,6 +13,10 @@ from panda3d.core import NetDatagram
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 
+from time import sleep
+
+import constants
+
 port_address=9099  # same for client and server
  
  # a valid server URL. You can also use a DNS name
@@ -28,31 +32,33 @@ cWriter = ConnectionWriter(cManager,0)
 myConnection=cManager.openTCPClientConnection(ip_address,port_address,timeout_in_miliseconds)
 if myConnection:
 	datagram = PyDatagram()
-	datagram.addString("Hello World!")
-	datagram.addString("and hello you <3")
-	datagram.addUint8(0)
+	datagram.addUint8(constants.dict_s_i["message"]) #unauthenticated should not work
+	datagram.addString("test destinataire 0")
+	datagram.addString("test message 0")
 	cWriter.send(datagram, myConnection)
-
 	datagram.clear()
 
-	udpSocket = cManager.openUDPConnection(9102)
+	sleep(2)
 
-	netaddr = NetAddress()
-	netaddr.setHost(ip_address, port_address+1)
-
-	i = 0
-	while(i<10):
-		datagram.addString("udp")
-		datagram.addString("udp end")
-		datagram.addUint8(0)
-		cWriter.send(datagram, udpSocket, netaddr)
-		datagram.clear()
-		i=i+1
-
-
-	datagram.addString("2 Hello World!")
-	datagram.addString("2 and hello you <3")
-	datagram.addUint8(1)
+	datagram.addUint8(constants.dict_s_i["alive"]) #bad username should not work
+	datagram.addString("law")
 	cWriter.send(datagram, myConnection)
-	
+	datagram.clear()
+
+sleep(2)
+
+myConnection=cManager.openTCPClientConnection(ip_address,port_address,timeout_in_miliseconds)
+if myConnection:
+	datagram.addUint8(constants.dict_s_i["alive"])
+	datagram.addString("testuser")	
+	cWriter.send(datagram, myConnection)
+	datagram.clear()
+
+	sleep(2)
+
+	datagram.addUint8(constants.dict_s_i["message"])
+	datagram.addString("test destinataire 1")
+	datagram.addString("test message 1")
+	cWriter.send(datagram, myConnection)
+	datagram.clear()
 	

@@ -4,83 +4,118 @@ from panda3d.core import QueuedConnectionManager
 from panda3d.core import QueuedConnectionListener
 from panda3d.core import QueuedConnectionReader
 from panda3d.core import ConnectionWriter
-
-from direct.task import Task
-
 from panda3d.core import PointerToConnection
 from panda3d.core import NetAddress
- 
 from panda3d.core import NetDatagram
-
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
-
 from time import sleep
+import copy
+import dataprocess as funcs
+import constants
 
-cManager = QueuedConnectionManager()
-cListener = QueuedConnectionListener(cManager, 0)
-tcpReader = QueuedConnectionReader(cManager, 0)
-udpReader = QueuedConnectionReader(cManager, 0)
-cWriter = ConnectionWriter(cManager,0)
+class Player():
+	def __init__(self):
+		self.username = ""
+		self.id = 0
+		self.ttl = constants.unactivity_ttl
 
-activeConnections=[] # We'll want to keep track of these later
+xmanager = QueuedConnectionManager() 
+xlistener = QueuedConnectionListener(xmanager, 0) 
+tcpReader = QueuedConnectionReader(xmanager, 0)
+udpReader = QueuedConnectionReader(xmanager, 0) 
+xwriter = ConnectionWriter(xmanager,0)
 
+port_address=9099
+backlog=1000 
+tcpSocket = xmanager.openTCPServerRendezvous(port_address,backlog) 
+udpSocket = xmanager.openUDPConnection(port_address + 1)
+
+xlistener.addConnection(tcpSocket)
+udpReader.addConnection(udpSocket)
+
+np = 2
+players = {}
 end = True
 
 def listenerPolling():
-	if cListener.newConnectionAvailable(): 
+	if xlistener.newConnectionAvailable(): 
 		rendezvous = PointerToConnection()
 		netAddress = NetAddress()
 		newConnection = PointerToConnection() 
-		if cListener.getNewConnection(rendezvous,netAddress,newConnection):
+		if xlistener.getNewConnection(rendezvous, netAddress, newConnection):
 			newConnection = newConnection.p()
-			activeConnections.append(newConnection) # Remember connection
-			tcpReader.addConnection(newConnection)    # Begin reading connection
+			print("new connection from {}".format(newConnection.getAddress().getIpString()))
+			players[newConnection] = Player()
+			print(len(players))
+			tcpReader.addConnection(newConnection)
 
 
 def readerPolling(reader):
 	if reader.dataAvailable():
 		datagram = NetDatagram()
 		if reader.getData(datagram):
-			processDatagram(datagram)
+			if reader == tcpReader:
+				processTcpDatagram(datagram)
+			elif reader == udpReader:
+				processUdpDatagram(datagram)
 
-def processDatagram(data):
+def isAuthorized(username):
+	return username == "testuser"
+
+def processTcpDatagram(data):
+	print("process tcp datagram")
 	iterator = PyDatagramIterator(data)
-	s = iterator.getString()
-	print(s)
-	s2 = iterator.getString()
-	print(s2)
-	if iterator.getUint8() == 1:
-		endItAll()
+	data_type = constants.dict_i_s.get(iterator.getUint8())
+
+	if data_type is not None:
+		if data_type == "alive":
+			funcs.aliveTcp(data, iterator, players, tcpReader)
+		elif data_type == "message":
+			funcs.messageTcp(data, iterator, players)		
+	else:
+		print("unknown data_type for datagram: ")
+		print(data)
+	
+def processUdpDatagram(data):
+	pass
 
 def endItAll():
-	global activeConnections
+	global players
 	global end
-	for aClient in activeConnections:
-		tcpReader.removeConnection(aClient)
+	for p in players:
+		tcpReader.removeConnection(p.connection)
 
-	activeConnections=[]
+	players = []
 
- 
+
 	# close down our listener
-	cManager.closeConnection(tcpSocket)
+	xmanager.closeConnection(tcpSocket)
+	xmanager.closeConnection(udpSocket)
 	print("done")
 	end = False
 
+def checkInactives():
+	global players
+	for item in players.items():
+		co = item[0]
+		p = item[1]
+		if p.ttl <= 0:
+			print(len(players))
+			print("deleting player : {}".format(p.username))
+			tcpReader.removeConnection(co)
+			del players[co]
+		else:		
+			p.ttl -= 10
+		
+
 ########################################################################
 
-port_address=9099 #No-other TCP/IP services are using this port
-backlog=1000 #If we ignore 1,000 connection attempts, something is wrong!
-tcpSocket = cManager.openTCPServerRendezvous(port_address,backlog)
-udpSocket = cManager.openUDPConnection(port_address + 1)
- 
-cListener.addConnection(tcpSocket)
-
-udpReader.addConnection(udpSocket)
 
 while(end):
 	listenerPolling()
 	readerPolling(tcpReader)
 	readerPolling(udpReader)
-	sleep(0.05)
+	checkInactives()
+	sleep(0.01)
 
