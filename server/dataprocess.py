@@ -8,58 +8,51 @@ from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 from time import sleep
 
-import constants
+unactivity_ttl = 5000 # 5 seconds
 
-def isAuthenticated(data, players):
-	p = players.get(data.getConnection())
-	if p is not None:
-		return p.username != ""
-	else:
-		return False
+datadict = {"connect": ("str"),
+		"alive" : ("str"),
+		"id" : ("int"),
+		"info" : ("str"),
+		"message": ("str", "str"),
+		"position" : ("float", "float", "float"),
+		"destination" : ("float", "float", "float"),
+		"spell" : ("str"),
+		}
 
+class Data(PyDatagram):
+	def __init__(self, str, *args, **kwargs):
+		PyDatagram.__init__(self, *args, **kwargs)
+		assert datadict[str] is not None, "message type " + str + " unfound in datadict"
+		self.mtype = str
+		self.datatypes = datadict[str]
 
-def isAuthorized(username):
-        return username == "testuser"
+	def addData(self, *args):
+		self.addString(self.mtype)
+		i = 0
+		for arg in args:
+			assert type(arg).__name__ == self.datatypes[i], "addData argument: " + arg + " is of wrong type for message type " + self.mtype
+			if self.datatypes[i] == "str":
+				self.addString(arg)
+			elif self.datatypes[i] == "int":
+				self.addInt64(arg)
+			elif self.datatypes[i] == "float":
+				self.addFloat64(arg)
+			i = i+1
 
-def aliveTcp(data, iterator, players, tcpReader):
-	print("alive tcp")
-	user = iterator.getString()
-	found = isAuthenticated(data, players)
-	
-	if found: #just an "alive"
-		p = players.get(data.getConnection())
-		p.ttl = constants.unactivity_ttl
-	else: #authentication
-		if isAuthorized(user):
-			print("authenticating user {}".format(user))
-			print(len(players))
-			p = players.get(data.getConnection())
-			if p is not None:
-				p.username = user
-				p.ttl = constants.unactivity_ttl
-		else:
-			print("unauthorized user: {}".format(user))
-			co = data.getConnection()
-			print("deleting {}".format(data.getConnection().getAddress().getIpString()))
-			xmanager = co.getManager()
-			tcpReader.removeConnection(co)
-			xmanager.closeConnection(co)
-			del players[co]
-			print(len(players))
+	@staticmethod
+	def getDataFromDatagram(datagram):
+		iterator = PyDatagramIterator(datagram)
+		theType = iterator.getString()
+		assert datadict[theType] is not None, "message type " + theType + " unfound in datadict"
+		datatypes = datadict[theType]
+		ret_list = []
+		for t in datatypes:
+			if t == "str":
+				ret_list.append(iterator.getString())
+			elif t == "int":
+				ret_list.append(iterator.getInt64())
+			elif t == "float":
+				ret_list.append(iterator.getFloat64())
 
-
-def messageTcp(data, iterator, players):
-	print("message tcp")
-	dest = iterator.getString()
-	mesg = iterator.getString()
-	if isAuthenticated(data, players):
-		print("MESSAGE TO: {}".format(dest))
-		print("MESSAGE CONTENT:")
-		print(mesg)
-		print("")
-	else:
-		print("unauthenticated message datagram")
-		print("MESSAGE TO: {}".format(dest))
-		print("MESSAGE CONTENT:")
-		print(mesg)
-		print("")
+		return ret_list
