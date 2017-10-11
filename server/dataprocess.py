@@ -27,7 +27,14 @@ class Data(PyDatagram):
 		self.mtype = str
 		self.datatypes = datadict[str]
 
-	def addData(self, *args):
+	def reinit(self, str):
+		self.clear()
+		assert datadict[str] is not None, "message type " + str + " unfound in datadict"
+		self.mtype = str
+		self.datatypes = datadict[str]
+
+	def setData(self, *args):
+		self.clear()
 		self.addString(self.mtype)
 		i = 0
 		for arg in args:
