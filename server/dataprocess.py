@@ -10,7 +10,7 @@ from time import sleep
 
 unactivity_ttl = 5000 # 5 seconds
 
-datadict = {"connect": ("str"),
+datadict = {"query": ("str", "str"),
 		"alive" : ("str"),
 		"id" : ("int"),
 		"info" : ("str"),
@@ -36,8 +36,7 @@ class Data(PyDatagram):
 	def setData(self, *args):
 		self.clear()
 		self.addString(self.mtype)
-		i = 0
-		for arg in args:
+		for i, arg in enumerate(args):
 			assert type(arg).__name__ == self.datatypes[i], "addData argument: " + arg + " is of wrong type for message type " + self.mtype
 			if self.datatypes[i] == "str":
 				self.addString(arg)
@@ -45,7 +44,7 @@ class Data(PyDatagram):
 				self.addInt64(arg)
 			elif self.datatypes[i] == "float":
 				self.addFloat64(arg)
-			i = i+1
+
 
 	@staticmethod
 	def getDataFromDatagram(datagram):

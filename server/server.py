@@ -23,7 +23,7 @@ xwriter = ConnectionWriter(xmanager,0)
 port_address=9099
 backlog=1000
 tcpSocket = xmanager.openTCPServerRendezvous(port_address,backlog)
-udpSocket = xmanager.openUDPConnection(port_address + 1)
+udpSocket = xmanager.openUDPConnection(port_address)
 
 xlistener.addConnection(tcpSocket)
 udpReader.addConnection(udpSocket)
@@ -64,11 +64,14 @@ def processTcpDatagram(datagram):
 
 	print(data_list)
 
-def processUdpDatagram(data):
+def processUdpDatagram(datagram):
 	print("process udp datagram")
 	data_list = Data.getDataFromDatagram(datagram)
 
 	print(data_list)
+
+
+
 
 ########################################################################
 
