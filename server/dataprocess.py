@@ -61,4 +61,4 @@ class Data(PyDatagram):
 			elif t == "float":
 				ret_list.append(iterator.getFloat64())
 
-		return ret_list
+		return theType, ret_list

@@ -72,15 +72,17 @@ class PartyServer:
 		if timeout is not None:
 			self.timeout = timeout
 
-		self.socket = self.coManager.openTCPClientConnection(self.address, self.timeout)
-		if self.socket is None:
-			self.printErrorCo()
-
 		self.udpSocket = self.coManager.openUDPConnection(udpLocalPort)
 		if self.udpSocket is None:
 			print("reconnect : can't open port udpPort for udp socket on port {}".format(self.address.getPort()))
 
-
+		self.socket = self.coManager.openTCPClientConnection(self.address, self.timeout)
+		if self.socket is None:
+			self.printErrorCo()
+		elif self.udpSocket is not None and self.socket.getAddress() is not None:
+			data = Data("query")
+			data.setData("udpLocalPort", str(udpLocalPort))
+			self.coWriter.send(data, self.socket)
 
 def connectToPartyServer(ip, port, timeout=3000, retry=3):
 	assert type(ip).__name__ == "str"
