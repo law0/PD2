@@ -17,8 +17,7 @@ from direct.distributed.PyDatagramIterator import PyDatagramIterator
 
 from time import sleep
 
-import dataprocess as services
-from dataprocess import Data
+from data import Data
 
 """
 Classe servant a la communication avec le server distant de party
@@ -28,14 +27,16 @@ pour changer le port local udp utilise reconnect(udpLocalPort = autreport)
 """
 class PartyServer:
 	def __init__(self, ip, port, timeout):
+		self.id = 0
 		self.address = NetAddress()
 		self.address.setHost(ip, port)
 		self.timeout = timeout
 		self.coManager = QueuedConnectionManager()
 		self.coWriter = ConnectionWriter(self.coManager,0)
 		self.coReader = QueuedConnectionReader(self.coManager,0)
-		self.socket = self.coManager.openTCPClientConnection(self.address, self.timeout)
-		self.udpSocket = self.coManager.openUDPConnection(self.address.getPort())
+		self.data = Data("info", 0)
+
+		self.reconnect()
 
 	def printErrorCo(self, ip=None, port=None):
 		if ip is None:
@@ -43,21 +44,6 @@ class PartyServer:
 		if port is None:
 			port = self.address.getPort()
 		print("unable to connect to {} {}".format(ip, port))
-
-	def send(self, data):
-		if self.socket is None:
-			print("connection is None")
-			self.printErrorCo()
-		else:
-			self.coWriter.send(data, self.socket)
-
-	def sendUdp(self, data):
-		if self.udpSocket is None:
-			print("connection is None")
-			print("sendUdp : can't open port udpPort for udp socket on port {}".format(self.address.getPort()))
-		else:
-			self.coWriter.send(data, self.udpSocket, self.address)
-
 
 	def reconnect(self, ip=None, port=None, timeout=None, udpLocalPort=None):
 		if ip is not None:
@@ -79,10 +65,47 @@ class PartyServer:
 		self.socket = self.coManager.openTCPClientConnection(self.address, self.timeout)
 		if self.socket is None:
 			self.printErrorCo()
-		elif self.udpSocket is not None and self.socket.getAddress() is not None:
-			data = Data("query")
-			data.setData("udpLocalPort", str(udpLocalPort))
+		else:
+			if self.socket.getAddress() is not None:
+				if self.id == 0:
+					self.data.reset("query")
+					self.data.setData("id","")
+					self.coWriter.send(self.data, self.socket)
+
+				if self.udpSocket is not None:
+					self.data.reset("info")
+					self.data.setData("udpLocalPort", str(udpLocalPort))
+					self.coWriter.send(self.data, self.socket)
+
+
+	def send(self, data):
+		if self.socket is None:
+			print("connection is None")
+			self.printErrorCo()
+		else:
 			self.coWriter.send(data, self.socket)
+
+	def sendUdp(self, data):
+		if self.udpSocket is None:
+			print("connection is None")
+			print("sendUdp : can't open port udpPort for udp socket on port {}".format(self.address.getPort()))
+		else:
+			self.coWriter.send(data, self.udpSocket, self.address)
+
+
+	def sendData(self, typeStr, *args):
+		if typeStr is not None:
+			self.data.reset(typeStr)
+			print(args)
+			self.data.setData(*args)
+			self.send(self.data)
+
+
+	def sendDataUdp(self, typeStr, *args):
+		if typeStr is not None:
+			self.data.reset(typeStr)
+			self.data.setData(*args)
+			self.sendUdp(self.data)
 
 def connectToPartyServer(ip, port, timeout=3000, retry=3):
 	assert type(ip).__name__ == "str"

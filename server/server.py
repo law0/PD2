@@ -11,8 +11,7 @@ from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 from time import sleep
 import copy
-import dataprocess as service
-from dataprocess import Data
+from data import Data
 
 xmanager = QueuedConnectionManager()
 xlistener = QueuedConnectionListener(xmanager, 0)
