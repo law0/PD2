@@ -16,7 +16,7 @@ datadict = {"query": ("str", "str",),
 		"info" : ("str", "str",),
 		"message": ("str", "str",),
 		"position" : ("float", "float", "float",),
-		"destination" : ("float", "float", "float",),
+		"destination" : ("float", "float",),
 		"spell" : ("str",) #forgetting ending comma in one-element tuple makes it a non-tuple!
 		}
 
@@ -66,6 +66,7 @@ class Data(PyDatagram):
 
 	@staticmethod
 	def getDataFromDatagram(datagram):
+		assert type(datagram).__name__ == "NetDatagram"
 		iterator = PyDatagramIterator(datagram)
 		theType = iterator.getString()
 		theId = iterator.getUint64()
@@ -80,4 +81,4 @@ class Data(PyDatagram):
 			elif t == "float":
 				ret_list.append(iterator.getFloat64())
 
-		return (theType, (theId, ret_list))
+		return {"type": theType, "id": theId, "connection": datagram.getConnection(), "address": datagram.getAddress(), "list": ret_list}

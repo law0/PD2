@@ -30,6 +30,7 @@ udpReader.addConnection(udpSocket)
 end = True
 
 actives = []
+data_list = []
 
 def listenToNewConnections():
 	if xlistener.newConnectionAvailable():
@@ -59,17 +60,26 @@ def isAuthorized(username):
 
 def processTcpDatagram(datagram):
 	print("process tcp datagram")
-	data_list = Data.getDataFromDatagram(datagram)
-
-	print(data_list)
+	data = Data.getDataFromDatagram(datagram)
+	print("from id: {} -> {}: {}".format(data["id"], data["type"], data["list"]))
+	data_list.append(data)
 
 def processUdpDatagram(datagram):
 	print("process udp datagram")
-	data_list = Data.getDataFromDatagram(datagram)
+	data = Data.getDataFromDatagram(datagram)
+	print("from id: {} -> {}: {}".format(data["id"], data["type"], data["list"]))
+	data_list.append(data)
 
-	print(data_list)
+def writeConnections():
+	for d in data_list:
+		if d["type"] == "query" and d["list"][0] == "id":
+			print("WRITING DATA")
+			newData = Data("id", 0)
+			newData.setData(42)
+			xwriter.send(newData, d["connection"])
 
-
+def deleteHistory():
+	del data_list[:]
 
 
 ########################################################################
@@ -78,6 +88,8 @@ def processUdpDatagram(datagram):
 while(end):
 	listenToNewConnections()
 	readConnections()
+	writeConnections()
+	deleteHistory()
 #	checkInactives()
 	sleep(0.01)
 
