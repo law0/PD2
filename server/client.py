@@ -17,7 +17,7 @@ from direct.distributed.PyDatagramIterator import PyDatagramIterator
 
 from time import sleep
 from data import Data
-from datapool import ReadingThread
+from readingthread import ReadingThread
 from datapool import DataPool
 
 """
@@ -37,7 +37,7 @@ class PartyServer:
 		self.coReader = QueuedConnectionReader(self.coManager, 0)
 		self.data = Data("info", 0)
 		self.udpSocket = None
-		self.socket = None
+		self.tcpSocket = None
 		self.dataPool = DataPool()
 		self.readingThread = ReadingThread(self.coReader, self.dataPool)
 
@@ -56,7 +56,7 @@ class PartyServer:
 		if self.readingThread.isAlive():
 			self.readingThread.stop()
 			self.readingThread.join()
-		self.coReader.removeConnection(self.socket)
+		self.coReader.removeConnection(self.tcpSocket)
 		self.coReader.removeConnection(self.udpSocket)
 		self.dataPool.clear()
 
@@ -66,6 +66,7 @@ class PartyServer:
 		if port is None:
 			port = self.address.getPort()
 		print("unable to connect to {} {}".format(ip, port))
+
 
 	def reconnect(self, ip=None, port=None, timeout=None, udpLocalPort=None):
 		if ip is not None:
@@ -84,12 +85,12 @@ class PartyServer:
 		if self.udpSocket is None:
 			print("reconnect : can't open port udpPort for udp socket on port {}".format(self.address.getPort()))
 
-		self.socket = self.coManager.openTCPClientConnection(self.address, self.timeout)
-		if self.socket is None:
+		self.tcpSocket = self.coManager.openTCPClientConnection(self.address, self.timeout)
+		if self.tcpSocket is None:
 			self.printErrorCo()
 		else:
-			if self.socket.getAddress() is not None:
-				self.coReader.addConnection(self.socket)
+			if self.tcpSocket.getAddress() is not None:
+				self.coReader.addConnection(self.tcpSocket)
 				if self.readingThread.isAlive():
 					self.readingThread.stop()
 					self.readingThread.join()
@@ -99,25 +100,24 @@ class PartyServer:
 				if self.id == 0:
 					self.data.reset("query")
 					self.data.setData("id","")
-					self.coWriter.send(self.data, self.socket)
+					self.coWriter.send(self.data, self.tcpSocket)
 
 				while self.id == 0:
 					self.getData() #set Id via server responses
 
 				if self.udpSocket is not None:
 					self.coReader.addConnection(self.udpSocket)
-
 					self.data.reset("info")
 					self.data.setData("udpLocalPort", str(udpLocalPort))
-					self.coWriter.send(self.data, self.socket)
+					self.coWriter.send(self.data, self.tcpSocket)
 
 
 	def send(self, data):
-		if self.socket is None:
+		if self.tcpSocket is None:
 			print("connection is None")
 			self.printErrorCo()
 		else:
-			self.coWriter.send(data, self.socket)
+			self.coWriter.send(data, self.tcpSocket)
 
 	def sendUdp(self, data):
 		if self.udpSocket is None:
@@ -165,7 +165,7 @@ class connectToPartyServer:
 
 	def __enter__(self):
 		i = 0
-		while self.ps.socket is None and i < self.retry:
+		while self.ps.tcpSocket is None and i < self.retry:
 			sleep(1)
 			self.ps.reconnect()
 			i = i+1

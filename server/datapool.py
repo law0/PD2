@@ -30,23 +30,3 @@ class DataPool():
 	def clear(self):
 		with self.lock:
 			del self.buffer[:]
-
-
-class ReadingThread(Thread):
-	def __init__(self, reader, dataPool):
-		Thread.__init__(self)
-		self.dataPool = dataPool
-		self.reader = reader
-		self.loop = True
-
-	def run(self):
-		self.loop = True
-		while self.loop:
-			if self.reader.dataAvailable():
-				datagram = NetDatagram()
-				if self.reader.getData(datagram):
-					data_list = Data.getDataFromDatagram(datagram)
-					self.dataPool.append(data_list)
-
-	def stop(self):
-		self.loop = False

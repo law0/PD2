@@ -22,3 +22,9 @@ with connectToPartyServer("127.0.0.1", 9099, retry=6) as partyServer:
 	print(theList)
 
 	partyServer.sendData("alive", "3")
+
+	raw_input()
+
+
+	theList = partyServer.getData()
+	print(theList)
