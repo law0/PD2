@@ -117,12 +117,10 @@ class ServerThread(Thread):
 				self.processUdpDatagram(datagram)
 
 	def processTcpDatagram(self, datagram):
-		print("process tcp datagram")
 		data = Data.getDataFromDatagram(datagram)
 		self.dataPoolIn.append(data)
 
 	def processUdpDatagram(self, datagram):
-		print("process udp datagram")
 		data = Data.getDataFromDatagram(datagram)
 		self.dataPoolIn.append(data)
 

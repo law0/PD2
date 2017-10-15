@@ -24,7 +24,6 @@ class ReadingThread(Thread):
 				datagram = NetDatagram()
 				if self.reader.getData(datagram):
 					data_list = Data.getDataFromDatagram(datagram)
-					print(data_list)
 					self.dataPool.append(data_list)
 
 	def stop(self):
