@@ -72,6 +72,7 @@ class ServerThread(Thread):
 			self.listenToNewConnections()
 			self.readConnections()
 			self.writeConnections()
+			sleep(0.001)
 
 
 	def __filter(self, data_list):

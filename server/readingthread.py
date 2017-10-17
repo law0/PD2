@@ -26,6 +26,7 @@ class ReadingThread(Thread):
 					data_list = Data.getDataFromDatagram(datagram)
 					if data_list is not None:
 						self.dataPool.append(data_list)
+			sleep(0.001)
 
 	def stop(self):
 		self.loop = False

@@ -28,8 +28,9 @@ if __name__ == "__main__":
 			data_list = threadServer.get()
 			for data in data_list:
 				print("{} {} {}".format(data["id"], data["type"], data["list"]))
-				if data["type"] == "position":
-					datagram.reset("info")
-					datagram.setData("received", "position")
-					newData = response(pro="udp", datagram=datagram, id=data["id"])
-					threadServer.append(newData)
+				#if data["type"] == "position":
+				#	datagram.reset("info")
+				#	datagram.setData("received", "position")
+				#	newData = response(pro="udp", datagram=datagram, id=data["id"])
+				#	threadServer.append(newData)
+			sleep(0.003)
