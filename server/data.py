@@ -17,6 +17,7 @@ datadict = {"query": ("str", "str",),
 		"message": ("str", "str",),
 		"position" : ("float", "float", "float",),
 		"destination" : ("float", "float",),
+		"rotationHPR" : ("float", "float", "float"),
 		"spell" : ("str",) #forgetting ending comma in one-element tuple makes it a non-tuple!
 		}
 
