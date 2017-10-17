@@ -158,10 +158,14 @@ class PartyServer:
 
 
 class connectToPartyServer:
-	def __init__(self, ip, port, timeout=3000, retry=3):
+	def __init__(self, ip, port, timeout=3000, retry=3, udpLocalPort=None):
 		assert type(ip).__name__ == "str"
 		assert type(port).__name__ == "int"
 		assert type(timeout).__name__ == "int"
+		self.udpLocalPort = port
+		if udpLocalPort is not None:
+			assert type(udpLocalPort).__name__ == "int"
+			self.udpLocalPort = udpLocalPort
 		self.ps = PartyServer(ip, port, timeout)
 		self.retry = retry
 
@@ -169,7 +173,7 @@ class connectToPartyServer:
 		i = 0
 		while self.ps.tcpSocket is None and i < self.retry:
 			sleep(1)
-			self.ps.reconnect()
+			self.ps.reconnect(udpLocalPort=self.udpLocalPort)
 			i = i+1
 
 		return self.ps
