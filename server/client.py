@@ -146,11 +146,15 @@ class PartyServer:
 		return buffer
 
 	def __filter(self, buffer):
-		for i, data in enumerate(buffer):
-			if data["type"] == "id":
-				self.id = data["list"][0];
+		to_delete=[]
+		for i, payload in enumerate(buffer):
+			if payload is None:
+				to_delete.append(payload)
+			elif payload["type"] == "id":
+				self.id = payload["list"][0];
 				self.data.setId(self.id)
 				del buffer[i]
+				to_delete.append(payload)
 
 
 class connectToPartyServer:

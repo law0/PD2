@@ -75,23 +75,32 @@ class ServerThread(Thread):
 
 
 	def __filter(self, data_list):
+		to_delete = []
 		for i, data in enumerate(data_list):
-			if data["type"] == "query" and data["list"][0] == "id": #identification
+			if data is None:
+				to_delete.append(data)
+			elif data["type"] == "query" and data["list"][0] == "id": #identification
 				newData = Data("id", 0)
-				xid = randint(1, 1000000000)
+				xid = randint(11, 10000000000) # todo
 				print("setting id -> {}".format(xid))
 				newData.setData(xid)
 				if xid not in self.idToConnection:
 					self.idToConnection[xid]={}
 				self.idToConnection[xid]["tcp"] = data["connection"]
 				self.coWriter.send(newData, data["connection"])
-			if data["type"] == "info" and data["list"][0] == "udpLocalPort": #udpLocalPort (client side)
+				to_delete.append(data)
+			elif data["type"] == "info" and data["list"][0] == "udpLocalPort": #udpLocalPort (client side)
 				xid = data["id"]
 				if xid not in self.idToConnection:
 					self.idToConnection[xid]={}
 				address = NetAddress(data["address"].getAddr())
 				address.setPort(int(data["list"][1]))
 				self.idToConnection[xid]["udp"] = address
+				to_delete.append(data)
+
+		for d in to_delete:
+			data_list.remove(d)
+
 
 	def listenToNewConnections(self):
 		if self.coListener.newConnectionAvailable():
@@ -118,16 +127,20 @@ class ServerThread(Thread):
 
 	def processTcpDatagram(self, datagram):
 		data = Data.getDataFromDatagram(datagram)
-		self.dataPoolIn.append(data)
+		if data is not None:
+			self.dataPoolIn.append(data)
 
 	def processUdpDatagram(self, datagram):
 		data = Data.getDataFromDatagram(datagram)
-		self.dataPoolIn.append(data)
+		if data is not None:
+			self.dataPoolIn.append(data)
 
 	def writeConnections(self):
 		data_list = self.dataPoolOut.get()
 		for data in data_list:
-			if data["pro"] == "udp":
+			if data is None:
+				continue
+			elif data["pro"] == "udp":
 				print("writing udp, port{} {}".format(self.idToConnection[data["id"]]["udp"].getPort(), data))
 				self.coWriter.send(data["datagram"], self.udpSocket, self.idToConnection[data["id"]]["udp"])
 			elif data["pro"] == "tcp":

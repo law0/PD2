@@ -24,7 +24,8 @@ class ReadingThread(Thread):
 				datagram = NetDatagram()
 				if self.reader.getData(datagram):
 					data_list = Data.getDataFromDatagram(datagram)
-					self.dataPool.append(data_list)
+					if data_list is not None:
+						self.dataPool.append(data_list)
 
 	def stop(self):
 		self.loop = False

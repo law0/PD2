@@ -68,17 +68,23 @@ class Data(PyDatagram):
 	def getDataFromDatagram(datagram):
 		assert type(datagram).__name__ == "NetDatagram"
 		iterator = PyDatagramIterator(datagram)
-		theType = iterator.getString()
-		theId = iterator.getUint64()
-		assert datadict[theType] is not None, "message type " + theType + " unfound in datadict"
-		datatypes = datadict[theType]
-		ret_list = []
-		for t in datatypes:
-			if t == "str":
-				ret_list.append(iterator.getString())
-			elif t == "int":
-				ret_list.append(iterator.getInt64())
-			elif t == "float":
-				ret_list.append(iterator.getFloat64())
+		retdic = None
+		try:
+			theType = iterator.getString()
+			theId = iterator.getUint64()
+			assert datadict[theType] is not None, "message type " + theType + " unfound in datadict"
+			datatypes = datadict[theType]
+			ret_list = []
+			for t in datatypes:
+				if t == "str":
+					ret_list.append(iterator.getString())
+				elif t == "int":
+					ret_list.append(iterator.getInt64())
+				elif t == "float":
+					ret_list.append(iterator.getFloat64())
 
-		return {"type": theType, "id": theId, "connection": datagram.getConnection(), "address": datagram.getAddress(), "list": ret_list}
+			retdic = {"type": theType, "id": theId, "connection": datagram.getConnection(), "address": datagram.getAddress(), "list": ret_list}
+		except AssertionError as e:
+			print("AssertionError caught: {} {}".format(e.errno, e.strerror))
+		finally:
+			return retdic

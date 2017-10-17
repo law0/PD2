@@ -22,9 +22,10 @@ class DataPool():
 	def get(self):
 		bufferOut = []
 		with self.lock:
-			for i, data in enumerate(self.buffer):
+			for data in self.buffer:
 				bufferOut.append(data)
-				del self.buffer[i]
+			del self.buffer[:]
+
 		return bufferOut
 
 	def clear(self):
