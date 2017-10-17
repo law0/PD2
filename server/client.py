@@ -65,6 +65,9 @@ class PartyServer:
 			port = self.address.getPort()
 		print("unable to connect to {} {}".format(ip, port))
 
+	def isConnected(self):
+		return self.tcpSocket is not None
+
 
 	def reconnect(self, ip=None, port=None, timeout=None, udpLocalPort=None):
 		if ip is not None:
@@ -171,12 +174,15 @@ class connectToPartyServer:
 
 	def __enter__(self):
 		i = 0
-		while self.ps.tcpSocket is None and i < self.retry:
+		while not self.ps.isConnected() and i < self.retry:
 			sleep(1)
 			self.ps.reconnect(udpLocalPort=self.udpLocalPort)
 			i = i+1
 
-		return self.ps
+		if not self.ps.isConnected():
+			return None
+		else:
+			return self.ps
 
 	def __exit__(self, exc_type, exc_value, traceback):
 		self.ps.stop()
