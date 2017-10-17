@@ -92,8 +92,7 @@ class ServerThread(Thread):
 				to_delete.append(data)
 			elif data["type"] == "info" and data["list"][0] == "udpLocalPort": #udpLocalPort (client side)
 				xid = data["id"]
-				if xid not in self.idToConnection:
-					self.idToConnection[xid]={}
+				assert xid in self.idToConnection, "udpLocalPort received before id set?"
 				address = NetAddress(data["address"].getAddr())
 				address.setPort(int(data["list"][1]))
 				self.idToConnection[xid]["udp"] = address
