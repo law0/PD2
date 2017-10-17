@@ -41,8 +41,6 @@ class PartyServer:
 		self.dataPool = DataPool()
 		self.readingThread = ReadingThread(self.coReader, self.dataPool)
 
-		self.reconnect()
-
 	def __del__(self):
 		self.stop()
 
