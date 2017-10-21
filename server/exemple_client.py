@@ -18,7 +18,7 @@ with connectToPartyServer("127.0.0.1", 9099, retry=6) as partyServer:
 	for i in xrange(0, 3):
 	        partyServer.sendDataUdp("position", 1.0, 2.0, 42.4242)
 
-	sleep(0.1)
+	sleep(0.001)
 	theList = partyServer.getData()
 	for d in theList:
 		print("type: {}", format(d["type"]))
