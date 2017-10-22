@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# coding: utf8
 
 from panda3d.core import QueuedConnectionReader
 from panda3d.core import NetAddress

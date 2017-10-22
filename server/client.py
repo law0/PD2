@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# coding: utf8
 
 from panda3d.core import QueuedConnectionManager
 from panda3d.core import ConnectionWriter
@@ -29,6 +30,8 @@ pour changer le port local udp utilise reconnect(udpLocalPort = autreport)
 class PartyServer:
 	def __init__(self, ip, port, timeout):
 		self.id = 0
+		self.playerId = 0
+		self.numberOfPlayers = 0
 		self.address = NetAddress()
 		self.address.setHost(ip, port)
 		self.timeout = timeout
@@ -98,19 +101,32 @@ class PartyServer:
 					self.readingThread = ReadingThread(self.coReader, self.dataPool)
 				self.readingThread.start()
 
-				if self.id == 0:
-					self.data.reset("query")
-					self.data.setData("id","")
-					self.coWriter.send(self.data, self.tcpSocket)
+				self.__connectionProcedure(udpLocalPort)
 
-				while self.id == 0:
-					self.getData() #set Id via server responses
 
-				if self.udpSocket is not None:
-					self.coReader.addConnection(self.udpSocket)
-					self.data.reset("info")
-					self.data.setData("udpLocalPort", str(udpLocalPort))
-					self.coWriter.send(self.data, self.tcpSocket)
+	def __connectionProcedure(self, udpLocalPort):
+		if self.id == 0:
+			self.data.reset("query")
+			self.data.setData("id","")
+			self.coWriter.send(self.data, self.tcpSocket)
+
+		while self.id == 0:
+			self.getData() #set Id via server responses (via __filter()), cet id est privé
+
+		if self.udpSocket is not None:
+			self.coReader.addConnection(self.udpSocket)
+			self.data.reset("info")
+			self.data.setData("udpLocalPort", str(udpLocalPort))
+			self.coWriter.send(self.data, self.tcpSocket)
+
+		self.data.reset("ready") #on signale au server qu'on est en ready state
+		self.data.setData(0, 0)
+		self.coWriter.send(self.data, self.tcpSocket)
+
+		while self.playerId == 0 or self.numberOfPlayers == 0:
+			self.getData() #set playerId et numberOfPlayers grace a __filter: le server repond par un ready avec numberOfPlayers et playerId
+
+		print("end of connection procedure")
 
 
 	def send(self, data):
@@ -150,14 +166,31 @@ class PartyServer:
 
 	def __filter(self, buffer):
 		to_delete=[]
-		for i, payload in enumerate(buffer):
+		for payload in buffer:
 			if payload is None:
 				to_delete.append(payload)
+
 			elif payload["type"] == "id":
-				self.id = payload["list"][0];
+				self.id = payload["list"][0]
 				self.data.setId(self.id)
-				del buffer[i]
 				to_delete.append(payload)
+
+			elif payload["type"] == "ready":
+				self.playerId = payload["list"][1]
+				self.numberOfPlayers = payload["list"][0]
+				to_delete.append(payload)
+
+		for payload in to_delete:
+			buffer.remove(payload)
+
+	def getId(self):
+		return self.id
+
+	def getPlayerId(self):
+		return self.playerId
+
+	def getNumberOfPlayers(self):
+		return self.numberOfPlayers
 
 
 class connectToPartyServer:

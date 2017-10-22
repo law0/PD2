@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# coding: utf8
 
 from panda3d.core import QueuedConnectionReader
 from panda3d.core import NetAddress
@@ -26,7 +27,7 @@ class ReadingThread(Thread):
 					data_list = Data.getDataFromDatagram(datagram)
 					if data_list is not None:
 						self.dataPool.append(data_list)
-			sleep(0.001)
+			sleep(0.001) #no non-RT OS will be that precise, but it's just to be nice to other process
 
 	def stop(self):
 		self.loop = False

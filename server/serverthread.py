@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# coding: utf8
 
 from panda3d.core import QueuedConnectionManager
 from panda3d.core import QueuedConnectionListener
@@ -72,7 +73,7 @@ class ServerThread(Thread):
 			self.listenToNewConnections()
 			self.readConnections()
 			self.writeConnections()
-			sleep(0.001)
+			sleep(0.001) #no non-RT OS will be that precise, but it's just to be nice to other process
 
 
 	def __filter(self, data_list):
@@ -141,10 +142,10 @@ class ServerThread(Thread):
 			if data is None:
 				continue
 			elif data["pro"] == "udp":
-				print("writing udp, port{} {}".format(self.idToConnection[data["id"]]["udp"].getPort(), data))
+				#print("writing udp, port{} {}".format(self.idToConnection[data["id"]]["udp"].getPort(), data))
 				self.coWriter.send(data["datagram"], self.udpSocket, self.idToConnection[data["id"]]["udp"])
 			elif data["pro"] == "tcp":
-				print("writing tcp : {}".format(data))
+				#print("writing tcp : {}".format(data))
 				self.coWriter.send(data["datagram"], self.idToConnection[data["id"]]["tcp"])
 
 
@@ -155,7 +156,7 @@ class ServerThread(Thread):
 
 #respond with dict("pro" : "udp" or "tcp", "datagram": Data(...), "id" : id_of_player)
 
-def response(pro="tcp", datagram=Data("alive", 0), id=1):
-	return {"pro":pro, "datagram": datagram, "id": id}
+def response(pro="tcp", datagram=Data("alive", 0), idToSendTo=1):
+	return {"pro":pro, "datagram": datagram, "id": idToSendTo}
 
 

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+#coding: utf8
 
 from panda3d.core import QueuedConnectionReader
 from panda3d.core import PointerToConnection
@@ -11,14 +12,15 @@ from time import sleep
 unactivity_ttl = 5000 # 5 seconds
 
 datadict = {"query": ("str", "str",),
-		"alive" : ("str",),
+		"alive" : ("str",), #forgetting ending comma in one-element tuple makes it a non-tuple!
+		"ready" : ("int","int"),
 		"id" : ("int",),
 		"info" : ("str", "str",),
-		"message": ("str", "str",),
+		"message": ("str", "str",), #first is dest
 		"position" : ("float", "float", "float",),
-		"destination" : ("float", "float",),
+		"destination" : ("float", "float","float",),
 		"rotationHPR" : ("float", "float", "float"),
-		"spell" : ("str",) #forgetting ending comma in one-element tuple makes it a non-tuple!
+		"spell" : ("str",)
 		}
 
 def checkAssert(str, id):
