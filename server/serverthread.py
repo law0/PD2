@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # coding: utf8
 
+import traceback
+
 from panda3d.core import QueuedConnectionManager
 from panda3d.core import QueuedConnectionListener
 from panda3d.core import QueuedConnectionReader
@@ -53,7 +55,10 @@ class ServerThread(Thread):
 		self.start()
 		return self
 
-	def __exit__(self, exc_type, exc_value, traceback):
+	def __exit__(self, exc_type, exc_value, tb):
+		print(exc_type)
+		print(exc_value)
+		traceback.print_tb
 		self.stop()
 		self.join()
 

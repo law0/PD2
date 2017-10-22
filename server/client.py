@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # coding: utf8
 
+import traceback
 from panda3d.core import QueuedConnectionManager
 from panda3d.core import ConnectionWriter
 from panda3d.core import QueuedConnectionReader
@@ -50,7 +51,10 @@ class PartyServer:
 	def __enter__(self):
 		return self
 
-	def __exit__(self, exc_type, exc_value, traceback):
+	def __exit__(self, exc_type, exc_value, tb):
+		print(exc_type)
+		print(exc_value)
+		traceback.print_tb(tb)
 		self.stop()
 
 	def stop(self):
@@ -69,6 +73,7 @@ class PartyServer:
 		print("unable to connect to {} {}".format(ip, port))
 
 	def isConnected(self):
+		print("is Connected? {}".format(self.tcpSocket is not None))
 		return self.tcpSocket is not None
 
 
@@ -217,7 +222,10 @@ class connectToPartyServer:
 		else:
 			return self.ps
 
-	def __exit__(self, exc_type, exc_value, traceback):
+	def __exit__(self, exc_type, exc_value, tb):
+		print(exc_type)
+		print(exc_value)
+		traceback.print_tb(tb)
 		self.ps.stop()
 		pst = self.ps
 		self.ps = None
