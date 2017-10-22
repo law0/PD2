@@ -61,8 +61,13 @@ class PartyServer:
 		if self.readingThread.isAlive():
 			self.readingThread.stop()
 			self.readingThread.join()
-		self.coReader.removeConnection(self.tcpSocket)
-		self.coReader.removeConnection(self.udpSocket)
+		if self.tcpSocket is not None:
+			self.coReader.removeConnection(self.tcpSocket)
+		if self.udpSocket is not None:
+			self.coReader.removeConnection(self.udpSocket)
+
+		self.tcpSocket = None
+		self.udpSocket = None
 		self.dataPool.clear()
 
 	def printErrorCo(self, ip=None, port=None):
@@ -90,10 +95,6 @@ class PartyServer:
 		if timeout is not None:
 			self.timeout = timeout
 
-		self.udpSocket = self.coManager.openUDPConnection(udpLocalPort)
-		if self.udpSocket is None:
-			print("reconnect : can't open port udpPort for udp socket on port {}".format(self.address.getPort()))
-
 		self.tcpSocket = self.coManager.openTCPClientConnection(self.address, self.timeout)
 		if self.tcpSocket is None:
 			self.printErrorCo()
@@ -106,10 +107,14 @@ class PartyServer:
 					self.readingThread = ReadingThread(self.coReader, self.dataPool)
 				self.readingThread.start()
 
-				self.__connectionProcedure(udpLocalPort)
-
+				self.udpSocket = self.coManager.openUDPConnection(udpLocalPort)
+				if self.udpSocket is None:
+					print("reconnect : can't open port udpPort for udp socket on port {}".format(udpLocalPort))
+				else:
+					self.__connectionProcedure(udpLocalPort)
 
 	def __connectionProcedure(self, udpLocalPort):
+		print("connection procedure started")
 		if self.id == 0:
 			self.data.reset("query")
 			self.data.setData("id","")
@@ -145,6 +150,7 @@ class PartyServer:
 		if self.udpSocket is None:
 			print("connection is None")
 			print("sendUdp : can't open port udpPort for udp socket on port {}".format(self.address.getPort()))
+			pass
 		else:
 			self.coWriter.send(data, self.udpSocket, self.address)
 
@@ -226,10 +232,7 @@ class connectToPartyServer:
 		print(exc_type)
 		print(exc_value)
 		traceback.print_tb(tb)
-		self.ps.stop()
-		pst = self.ps
-		self.ps = None
-		del pst
+		del self.ps
 
 
 ####################################################################################################################
