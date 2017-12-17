@@ -10,8 +10,19 @@ public class Move : NetworkBehaviour
 	public float gravity = 20.0F;
 	private Vector3 targetPos = Vector3.zero;
 	private Vector3 moveDirection = Vector3.zero;
+    public Vector3 MoveDirection
+    {
+        get
+        {
+            return moveDirection;
+        }
+        set
+        {
+            moveDirection = value;
+        }
+    }
 
-	private Plane groundPlane = new Plane(new Vector3(0.0F, 1.0F, 0.0F), new Vector3(0.0F, 0.0F, 0.0F));
+    private Plane groundPlane = new Plane(new Vector3(0.0F, 1.0F, 0.0F), new Vector3(0.0F, 0.0F, 0.0F));
 	public Camera cam;
 	public GameObject body;
 
@@ -46,10 +57,14 @@ public class Move : NetworkBehaviour
 
 		if(Input.GetButton("Jump"))
 			moveDirection.y = jumpSpeed;
-		
-		moveDirection = Vector3.Normalize(targetPos - transform.position);
-		moveDirection *= speed;
-		moveDirection.y -= gravity * Time.deltaTime;
+
+        Vector3 xyz = Vector3.Normalize(targetPos - transform.position);
+        moveDirection.x = xyz.x * speed;
+        moveDirection.z = xyz.z * speed;
+        if (controller.isGrounded)
+            moveDirection.y = 0.0F;
+        else
+		    moveDirection.y -= gravity * Time.deltaTime;
 		controller.Move(moveDirection * Time.deltaTime);
 	}
 }
