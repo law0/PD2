@@ -49,6 +49,7 @@
      <Compile Include="Assets\All script\CamScript\CameraObjectScript.cs" />
      <Compile Include="Assets\All script\HeroesScript\Move.cs" />
      <Compile Include="Assets\All script\MenuesScript\MapSelector.cs" />
+     <Compile Include="Assets\Respawn.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
