@@ -46,10 +46,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\All script\CamScript\CameraObjectScript.cs" />
-     <Compile Include="Assets\All script\HeroesScript\Move.cs" />
-     <Compile Include="Assets\All script\MenuesScript\MapSelector.cs" />
-     <Compile Include="Assets\Respawn.cs" />
+     <Compile Include="Assets\Scripts\CamScript\CameraObjectScript.cs" />
+     <Compile Include="Assets\Scripts\HeroesScript\Move.cs" />
+     <Compile Include="Assets\Scripts\HeroesScript\Respawn.cs" />
+     <Compile Include="Assets\Scripts\MenuesScript\MapSelector.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
