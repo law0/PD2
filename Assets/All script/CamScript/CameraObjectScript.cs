@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraObjectScript : MonoBehaviour {
 	private Vector3 rot = Vector3.zero;
 	public float rotSpeed = 10.0F;
-	public GameObject target {get; set;}
+	public GameObject target;
 	
 	// Update is called once per frame
 	void Update () 
