@@ -6,10 +6,35 @@ using UnityEngine.UI;
 
 public class MapSelector : MonoBehaviour {
 
+    public static bool isHost = true;
+    public static string addr = "";
 	public GameObject LoadingImage;
 	public Slider loadingBar;
 	private AsyncOperation async;
+    private Camera cam;
 
+
+    void Start()
+    {
+        cam = Camera.main;
+    }
+
+    public void nextMenu()
+    {
+        Vector3 x = cam.transform.position;
+        x.x += 907;
+        cam.transform.position = x;
+    }
+
+    public static void setIsHost(bool b)
+    {
+        isHost = b;
+    }
+
+    public static void setServerAddr(string str)
+    {
+        addr = str;
+    }
 
 	//set the loading screen and call loadlevelwith bar
 	public void SetLoadingScreen(int levelID){
