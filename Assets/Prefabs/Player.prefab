@@ -34,7 +34,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4816049186296550}
-  - component: {fileID: 95931653383295494}
   m_Layer: 0
   m_Name: knight
   m_TagString: Untagged
@@ -281,6 +280,9 @@ GameObject:
   - component: {fileID: 114924272425065746}
   - component: {fileID: 114007987798393474}
   - component: {fileID: 114470377571560964}
+  - component: {fileID: 114210278756368614}
+  - component: {fileID: 95878693517359158}
+  - component: {fileID: 114469194852758360}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1207,17 +1209,17 @@ Transform:
   m_Father: {fileID: 4075493071831370}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &95931653383295494
+--- !u!95 &95878693517359158
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1025482779096568}
+  m_GameObject: {fileID: 1459280380595006}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 32521b3e95a6af341bb8b250787c3edc, type: 3}
   m_Controller: {fileID: 9100000, guid: a15671538b0fe39449a171512a693d33, type: 2}
-  m_CullingMode: 1
+  m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
@@ -1275,6 +1277,21 @@ MonoBehaviour:
     i15: 15
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
+--- !u!114 &114210278756368614
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1459280380595006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97c1da3820dfda540b6c68c23b01b6ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waitFor: 0.2
+  bullet: {fileID: 1154856016790168, guid: f17b8f49081af12429fc3744b021a4dd, type: 2}
+  fireRate: 0.5
+  emitterTransform: {fileID: 4816049186296550}
 --- !u!114 &114356480720707054
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1291,6 +1308,25 @@ MonoBehaviour:
   gravity: 20
   cam: {fileID: 0}
   body: {fileID: 1025482779096568}
+--- !u!114 &114469194852758360
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1459280380595006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1590678366, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Animator: {fileID: 95878693517359158}
+  m_ParameterSendBits: 3
+  param0: 
+  param1: 
+  param2: 
+  param3: 
+  param4: 
+  param5: 
 --- !u!114 &114470377571560964
 MonoBehaviour:
   m_ObjectHideFlags: 1

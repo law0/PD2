@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CameraObject
   - LocalPlayer
+  - NetworkAnimator
   layers:
   - Default
   - TransparentFX

@@ -8,7 +8,7 @@ public class Respawn : MonoBehaviour {
 	void Update () 
     {
         if (transform.position.y < -10)
-        {
+		{
             transform.position = new Vector3(0.0F, 2.0F, 0.0F);
             gameObject.GetComponent<Move>().stopMove();
         }
