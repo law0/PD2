@@ -4,17 +4,19 @@ using UnityEngine;
 
 public class dummy_bullet : MonoBehaviour {
 	public float speed;
-	public float timeToLive = 1.0F;
+	public float distanceToLive = 2.0F;
+	private Vector3 startingPoint;
 
 	void Start()
 	{
-		//destroy the object (this bullet) after timeToLive seconds
-		Destroy(gameObject, timeToLive);
+		startingPoint = transform.position;
+		gameObject.GetComponent<Rigidbody>().velocity = transform.forward * speed;
 	}
 
 	// Update is called once per frame
 	void Update () 
 	{
-		transform.position += transform.forward * speed;
+		if(Vector3.Distance(startingPoint, transform.position) > distanceToLive)
+			Destroy(gameObject);
 	}
 }

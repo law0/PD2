@@ -7,8 +7,7 @@ public class Move : NetworkBehaviour
 {
     private Animator anim;
 	public float speed = 6.0F;
-	public float jumpSpeed = 8.0F;
-	public float gravity = 20.0F;
+	public float jumpSpeed = 0.5F;
 	private Vector3 targetPos = Vector3.zero;
 	private Vector3 moveDirection = Vector3.zero;
 
@@ -30,8 +29,6 @@ public class Move : NetworkBehaviour
 		if(!isLocalPlayer)
 			return;
 
-		CharacterController controller = GetComponent<CharacterController>();
-
 		if(Input.GetMouseButton(0))
 		{
 			//targetPos is used to move the player
@@ -39,7 +36,7 @@ public class Move : NetworkBehaviour
 			lookAtY(ref targetPos);
 		}
 
-		if (Input.GetButton("Jump"))
+		if (Input.GetButton("Jump") && transform.position.y < 0.65F) //deuxieme condition a remplacer par detection de collision avec l'objet sol
 		{
 			jump();
 		}
@@ -62,11 +59,8 @@ public class Move : NetworkBehaviour
 
         anim.SetFloat("moving", movement);
 
-        if (controller.isGrounded)
-            moveDirection.y = 0.0F;
-        else
-		    moveDirection.y -= gravity * Time.deltaTime;
-		controller.Move(moveDirection * Time.deltaTime);
+		Rigidbody rb = GetComponent<Rigidbody>();
+		rb.MovePosition(transform.position + moveDirection * Time.deltaTime);
 
 	}
 
@@ -98,7 +92,8 @@ public class Move : NetworkBehaviour
 
 	public void jump()
 	{
-		moveDirection.y = jumpSpeed;
+		Rigidbody rb = GetComponent<Rigidbody>();
+		rb.velocity = Vector3.up * jumpSpeed;
 	}
 
 }
