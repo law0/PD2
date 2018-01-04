@@ -10,6 +10,7 @@ public class Move : NetworkBehaviour
 	public float jumpSpeed = 0.5F;
 	private Vector3 targetPos = Vector3.zero;
 	private Vector3 moveDirection = Vector3.zero;
+	private bool moveAsked = false;
 
     private Plane groundPlane = new Plane(new Vector3(0.0F, 1.0F, 0.0F), new Vector3(0.0F, 0.0F, 0.0F));
 	public Camera cam;
@@ -34,6 +35,7 @@ public class Move : NetworkBehaviour
 			//targetPos is used to move the player
 			getMouse3DPosition(ref targetPos);
 			lookAtY(ref targetPos);
+			moveAsked = true;
 		}
 
 		if (Input.GetButton("Jump") && transform.position.y < 0.65F) //deuxieme condition a remplacer par detection de collision avec l'objet sol
@@ -46,27 +48,36 @@ public class Move : NetworkBehaviour
 			//if A (attack) we want to look at the mouse position but not update targetPos (not to move)
 			Vector3 attackDir = targetPos;
 			getMouse3DPosition(ref attackDir); //getMouse3DPosition may or may not update the vector passed to it (if mouse is out of screen)
-			//if attackDir is not updated, it will not rotate the Player because attackDir is a copy of targetPos
+											   //if attackDir is not updated, it will not rotate the Player because attackDir is a copy of targetPos
 			lookAtY(ref attackDir);
 		}
 
-		//actual movement is done below
-        Vector3 xyz = Vector3.Normalize(targetPos - transform.position);
-        moveDirection.x = xyz.x * speed;
-        moveDirection.z = xyz.z * speed;
+		if (moveAsked) //condition sinon le personnage voudra rejoindre targetPos tout le temps
+		{
+			//actual movement is done below
+			Vector3 xyz = Vector3.Normalize(targetPos - transform.position);
+			moveDirection.x = xyz.x * speed;
+			moveDirection.z = xyz.z * speed;
 
-        float movement = Mathf.Sqrt(xyz.x * xyz.x + xyz.z * xyz.z);
+			float movement = Mathf.Sqrt(xyz.x * xyz.x + xyz.z * xyz.z);
 
-        anim.SetFloat("moving", movement);
+			anim.SetFloat("moving", movement);
 
-		Rigidbody rb = GetComponent<Rigidbody>();
-		rb.MovePosition(transform.position + moveDirection * Time.deltaTime);
+			Rigidbody rb = GetComponent<Rigidbody>();
+			rb.MovePosition(transform.position + moveDirection * Time.deltaTime);
+			if ((targetPos - transform.position).magnitude < 0.1F)
+			{
+				stopMove();
+			}
+		}
 
 	}
 
     public void stopMove()
     {
         targetPos = transform.position;
+		anim.SetFloat("moving", 0.0F);
+		moveAsked = false;
     }
 
 	//get where mouse point
