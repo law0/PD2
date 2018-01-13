@@ -54,7 +54,11 @@ public class Attack : NetworkBehaviour {
 	public IEnumerator actualAttack()
 	{
 		yield return new WaitForSeconds(waitFor);
-		var bullet_clone = Instantiate(bullet, emitterTransform.position, emitterTransform.rotation) as GameObject;
+		var bullet_clone = Instantiate(bullet, emitterTransform.position + Vector3.up, emitterTransform.rotation) as GameObject;
+		var bullet_script = bullet_clone.GetComponent<dummy_bullet>();
+		if (bullet_script != null)
+			bullet_script.setOriginGameObject(gameObject);
+
 		NetworkServer.Spawn(bullet_clone); //need to make the network server spawn everywhere (on each client) the bullet_clone
 	}
 }

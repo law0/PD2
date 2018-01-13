@@ -16,11 +16,14 @@ public class Move : NetworkBehaviour
 	public Camera cam;
 	public GameObject body;
 
-	//called on start if this object is local player
 	public override void OnStartLocalPlayer()
 	{
 		cam = Camera.main;
 		tag = "LocalPlayer";
+	}
+
+	void Start()
+	{
         anim = transform.GetComponent<Animator>();
 	}
 
