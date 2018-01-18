@@ -1,4 +1,0 @@
-sceneSetups:
-- path: Assets/Scenes/MapSelectorMenu.unity
-  isLoaded: 1
-  isActive: 1
