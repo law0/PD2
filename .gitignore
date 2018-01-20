@@ -2,3 +2,4 @@ Library/**
 Library/metadata/**
 Assembly-CSharp.csproj
 .gitignore
+Temp/
