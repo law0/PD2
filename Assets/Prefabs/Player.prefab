@@ -1335,7 +1335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97c1da3820dfda540b6c68c23b01b6ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waitFor: 0.2
+  waitFor: 0.5
   bullet: {fileID: 1154856016790168, guid: f17b8f49081af12429fc3744b021a4dd, type: 2}
   fireRate: 0.5
   emitterTransform: {fileID: 4810982986293696}

@@ -60,7 +60,8 @@ public class Attack : NetworkBehaviour {
 	public IEnumerator actualAttack()
 	{
 		yield return new WaitForSeconds(waitFor);
-		var bullet_clone = Instantiate(bullet, emitterTransform.position + Vector3.up, emitterTransform.rotation) as GameObject;
+		var bullet_clone = Instantiate(bullet, emitterTransform.position + Vector3.up + emitterTransform.forward * 2, emitterTransform.rotation) as GameObject;
+		                                                                  //un peu plus haut qu'au sol, et un peu plus en avant par rapport au perso  
 		var bullet_script = bullet_clone.GetComponent<dummy_bullet>();
 		if (bullet_script != null)
 			bullet_script.setOriginGameObject(gameObject);
