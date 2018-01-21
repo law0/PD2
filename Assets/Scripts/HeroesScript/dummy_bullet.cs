@@ -23,6 +23,28 @@ public class dummy_bullet : MonoBehaviour {
 	{
 		startingPoint = transform.position;
 		gameObject.GetComponent<Rigidbody>().velocity = transform.forward * speed;
+
+
+		//l'idée est ici de dissocier la bullet du particle system puisque celui ci doit continuer a briller meme quand
+		//la bullet a été destroyed
+		var particle_system = transform.GetChild(0).gameObject as GameObject;
+		if (particle_system)
+		{
+			//on applique la meme vitesse au particle system, pour que celui ci suivent la trajectoire de la bullet
+			particle_system.GetComponent<Rigidbody>().velocity = transform.forward * speed;
+			ParticleSystem ps = particle_system.GetComponent<ParticleSystem>();
+			ps.Stop();
+			var main = ps.main;
+			main.duration = distanceToLive / speed; //la duration doit etre précisément la meme que celle de la bullet
+			//sinon le joueur aura l'impression que la balle va plus ou moins loin qu'elle ne va réellement!
+			ps.Play();
+
+			Destroy(particle_system, main.duration + 8); //on estime que de base, la majorité des particles se seront
+			//éteinte 8 secondes apres le temps de la période d'emission.
+			//On détruit donc le particle system apres ce délai
+		}
+
+		transform.DetachChildren();
 	}
 
 	// Update is called once per frame

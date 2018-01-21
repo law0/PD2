@@ -41,11 +41,6 @@ public class Move : NetworkBehaviour
 			moveAsked = true;
 		}
 
-		if (Input.GetButton("Jump") && transform.position.y < 0.65F) //deuxieme condition a remplacer par detection de collision avec l'objet sol
-		{
-			jump();
-		}
-
 		if (Input.GetKeyDown(KeyCode.A))
 		{
 			//if A (attack) we want to look at the mouse position but not update targetPos (not to move)
