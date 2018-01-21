@@ -47,8 +47,14 @@ public class Attack : NetworkBehaviour {
 	{
 		if (bullet != null)
 		{
-			StartCoroutine(actualAttack());
+			RpcActualAttack();
 		}
+	}
+
+	[ClientRpc]
+	public void RpcActualAttack()
+	{
+		StartCoroutine(actualAttack());
 	}
 
 	public IEnumerator actualAttack()
@@ -59,6 +65,7 @@ public class Attack : NetworkBehaviour {
 		if (bullet_script != null)
 			bullet_script.setOriginGameObject(gameObject);
 
-		NetworkServer.Spawn(bullet_clone); //need to make the network server spawn everywhere (on each client) the bullet_clone
+		if(isServer)
+			NetworkServer.Spawn(bullet_clone); //need to make the network server spawn everywhere (on each client) the bullet_clone
 	}
 }
