@@ -12,13 +12,8 @@ public class Move : NetworkBehaviour
 	private Vector3 moveDirection = Vector3.zero;
 	private bool moveAsked = false;
 
-    private Plane groundPlane = new Plane(new Vector3(0.0F, 1.0F, 0.0F), new Vector3(0.0F, 0.0F, 0.0F));
-	public Camera cam;
-	public GameObject body;
-
 	public override void OnStartLocalPlayer()
 	{
-		cam = Camera.main;
 		tag = "LocalPlayer";
 	}
 
@@ -36,18 +31,9 @@ public class Move : NetworkBehaviour
 		if(Input.GetMouseButton(0))
 		{
 			//targetPos is used to move the player
-			getMouse3DPosition(ref targetPos);
-			lookAtY(ref targetPos);
+			PlayerUtils.GetMouse3DPosition(ref targetPos);
+			PlayerUtils.LookAtY(gameObject, ref targetPos);
 			moveAsked = true;
-		}
-
-		if (Input.GetKeyDown(KeyCode.A))
-		{
-			//if A (attack) we want to look at the mouse position but not update targetPos (not to move)
-			Vector3 attackDir = targetPos;
-			getMouse3DPosition(ref attackDir); //getMouse3DPosition may or may not update the vector passed to it (if mouse is out of screen)
-											   //if attackDir is not updated, it will not rotate the Player because attackDir is a copy of targetPos
-			lookAtY(ref attackDir);
 		}
 
 		if (moveAsked) //condition sinon le personnage voudra rejoindre targetPos tout le temps
@@ -77,27 +63,6 @@ public class Move : NetworkBehaviour
 		anim.SetFloat("moving", 0.0F);
 		moveAsked = false;
     }
-
-	//get where mouse point
-	public void getMouse3DPosition(ref Vector3 target)
-	{
-		Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-		float rayDistance;
-		if (groundPlane.Raycast(ray, out rayDistance))
-		{
-			target = ray.GetPoint(rayDistance);
-		}
-	}
-
-	//rotate transform along Y axis only such as gameObject is looking at target
-	public void lookAtY(ref Vector3 target)
-	{
-		body.transform.LookAt(target);
-		Vector3 lea = body.transform.eulerAngles;
-		lea.x *= 0.0F;
-		lea.z *= 0.0F;
-		body.transform.eulerAngles = lea;
-	}
 
 	public void jump()
 	{

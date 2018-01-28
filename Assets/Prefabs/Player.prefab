@@ -565,9 +565,9 @@ GameObject:
   - component: {fileID: 114115756964324840}
   - component: {fileID: 114737924110440656}
   - component: {fileID: 114738236143836812}
-  - component: {fileID: 114369505085729594}
   - component: {fileID: 95372139096711390}
   - component: {fileID: 114373576351916514}
+  - component: {fileID: 114627509257063440}
   - component: {fileID: 54130409005512914}
   - component: {fileID: 136734117512898780}
   - component: {fileID: 114017335882280082}
@@ -1290,8 +1290,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 6
   jumpSpeed: 8
-  cam: {fileID: 0}
-  body: {fileID: 1479084959109002}
 --- !u!114 &114306206911300620
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1324,21 +1322,6 @@ MonoBehaviour:
     i15: 15
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
---- !u!114 &114369505085729594
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1870698345723830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97c1da3820dfda540b6c68c23b01b6ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waitFor: 0.5
-  bullet: {fileID: 1154856016790168, guid: f17b8f49081af12429fc3744b021a4dd, type: 2}
-  fireRate: 0.5
-  emitterTransform: {fileID: 4810982986293696}
 --- !u!114 &114373576351916514
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1373,6 +1356,19 @@ MonoBehaviour:
   statName: health
   min: 0
   max: 100
+--- !u!114 &114627509257063440
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1870698345723830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c94bed27a4e86349af1b6f96d264408, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bullets:
+  - {fileID: 1154856016790168, guid: f17b8f49081af12429fc3744b021a4dd, type: 2}
 --- !u!114 &114737924110440656
 MonoBehaviour:
   m_ObjectHideFlags: 1

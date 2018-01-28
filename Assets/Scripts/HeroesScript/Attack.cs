@@ -3,70 +3,80 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class Attack : NetworkBehaviour {
+public enum AttackType
+{
+	CAST,
+	DASH,
+	MELEE,
+};
 
-	//animator
-	private Animator anim;
-	private float anim_float = 0.0F; //triggers doesn't work online
-	//you may want to wait some time before spawning the bullet (example end of animation)
-	public float waitFor = 0.0F;
-	//bullet prefab
-	public GameObject bullet;
-	public float fireRate = 0.5F;
+public class Attack
+{
+	//type de l'attaque: CAST, DASH ou MELEE
+	private AttackType _type;
 
-	//transform de l'emetteur (parce que pas forcement le Player ex: le bout d'un canon)
-	public Transform emitterTransform;
+	//delai entre 2 attaques
+	private float _cooldown;
+	public float Cooldown { get { return _cooldown; } }
 
-	private float nextFire = 0.0F;
+	//delai de charge au moment du lancement de l'attaque (exemple : animation avant explosion)
+	private float _chargeCooldown;
+	public float ChargeCooldown { get { return _chargeCooldown; } }
 
-	// Use this for initialization
-	void Start () 
+	//moment ou le cooldown sera ecoule 
+	private float _nextFireTime;
+	public float NextFireTime { get { return _nextFireTime; } }
+
+	//touche clavier de lancement de l'attaque
+	private KeyCode _key;
+	public KeyCode Key{ get { return _key; } }
+
+	//name of animation float trigger
+	private string _animFloatName;
+	public string AnimFloatName { get { return _animFloatName; } }
+
+	//si l'attaque est un cast alors on a besoin de la balle
+	private GameObject _bullet;
+
+	//constructeur
+	public Attack(AttackType type, float cooldown, KeyCode key, string animFloat, float chargeCooldown = 0.0F)
 	{
-		anim = transform.GetComponent<Animator>();
+		_type = type;
+		_cooldown = cooldown;
+		_key = key;
+		_animFloatName = animFloat;
 	}
-	
-	// Update is called once per frame
-	void Update () 
+
+	//fonction de lancement de l'attaque
+	public IEnumerator fire(GameObject emitter)
 	{
-		if (!isLocalPlayer)
-			return;
-		if (Input.GetKeyDown(KeyCode.A) && Time.time > nextFire)
+		_nextFireTime = Time.time + _cooldown;
+		yield return new WaitForSeconds(_chargeCooldown);
+		if (_type == AttackType.CAST)
 		{
-			anim_float = 1.0F;
-			nextFire = Time.time + fireRate;
-			CmdAttack();
-		}
-		//because networkanimator doesn't fuckin sync triggers automatically... and it still bugs
-		anim.SetFloat("attack", anim_float);
-		anim_float = anim_float <= 0 ? 0 : anim_float - 0.10F;
-	}
+			var bullet_clone = Object.Instantiate(_bullet, emitter.transform.position + Vector3.up + emitter.transform.forward * 2, emitter.transform.rotation) as GameObject;
+			//un peu plus haut qu'au sol, et un peu plus en avant par rapport au perso  
+			var bullet_script = bullet_clone.GetComponent<dummy_bullet>();
+			if (bullet_script != null)
+				bullet_script.setOriginGameObject(emitter);
 
-	//[Command] functions are Asked by client but Called on the Server only
-	[Command]
-	public void CmdAttack()
-	{
-		if (bullet != null)
-		{
-			RpcActualAttack();
-		}
-	}
-
-	[ClientRpc]
-	public void RpcActualAttack()
-	{
-		StartCoroutine(actualAttack());
-	}
-
-	public IEnumerator actualAttack()
-	{
-		yield return new WaitForSeconds(waitFor);
-		var bullet_clone = Instantiate(bullet, emitterTransform.position + Vector3.up + emitterTransform.forward * 2, emitterTransform.rotation) as GameObject;
-		                                                                  //un peu plus haut qu'au sol, et un peu plus en avant par rapport au perso  
-		var bullet_script = bullet_clone.GetComponent<dummy_bullet>();
-		if (bullet_script != null)
-			bullet_script.setOriginGameObject(gameObject);
-
-		if(isServer)
 			NetworkServer.Spawn(bullet_clone); //need to make the network server spawn everywhere (on each client) the bullet_clone
+		}
+		else if (_type == AttackType.DASH)
+		{//not an actual dash attack, just an acceleration during 1 sec, need to change that
+			var moveScript = emitter.GetComponent<Move>() as Move;
+			float origspeed = moveScript.speed;
+			moveScript.speed = 12.0F;
+			yield return new WaitForSeconds(1.0F);
+			moveScript.speed = origspeed;
+		}
+	}
+
+	public void setBullet(GameObject bullet)
+	{
+		if (AttackType.CAST != _type)
+			return;
+
+		_bullet = bullet;
 	}
 }
