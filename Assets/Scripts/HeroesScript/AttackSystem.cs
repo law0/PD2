@@ -8,21 +8,24 @@ public class AttackSystem : NetworkBehaviour {
 	//animator
 	private Animator anim;
 	private float anim_float = 0.0F; //triggers doesn't work online
-	//bullet prefabs
 	public GameObject[] bullets;
 
 	//code en dur a remplacer
 	//les attaques sont ici, a remplacer pour chargement "dynamique"
-	private Attack[] attacks = {
-		new Attack(AttackType.CAST, 0.5F, KeyCode.A, "cast_attack"),
-		new Attack(AttackType.DASH, 1.0F, KeyCode.Z, "dash_attack"),
-	};
+	private List<Attack> attacks = new List<Attack>(); 
 
 	// Use this for initialization
 	void Start () 
 	{
+		AttackData castData = new AttackData(); castData.bullet = bullets[0];
+		AttackData accelData = new AttackData(); accelData.accelSpeed = 12.0F;
+		AttackData dashData = new AttackData(); dashData.dashSpeed = 18.0F; dashData.dashDistance = 5.0F;
+
+		attacks.Add(new Attack(AttackType.CAST, 0.5F, KeyCode.A, "cast_attack", castData));
+		attacks.Add(new Attack(AttackType.ACCEL, 1.0F, KeyCode.Z, "accel_attack", accelData));
+		attacks.Add(new Attack(AttackType.DASH, 1.0F, KeyCode.E, "dash_attack", dashData));
+
 		anim = transform.GetComponent<Animator>();
-		attacks[0].setBullet(bullets[0]);
 	}
 	
 	// Update is called once per frame
@@ -30,7 +33,7 @@ public class AttackSystem : NetworkBehaviour {
 	{
 		if (!isLocalPlayer)
 			return;
-		for (int index = 0; index < attacks.Length; ++index) //et pas un foreach parce qu'on a besoin de l'index
+		for (int index = 0; index < attacks.Count; ++index) //et pas un foreach parce qu'on a besoin de l'index
 		{//puisqu'on ne peut transmettre que des types basique a travers les Cmd et Rpc
 			if (Input.GetKeyDown(attacks[index].Key) && Time.time > attacks[index].NextFireTime)
 			{

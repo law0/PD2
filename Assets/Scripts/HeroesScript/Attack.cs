@@ -3,10 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+public struct AttackData
+{
+	public GameObject bullet; //a renseigner si type cast
+	public float accelSpeed; //a renseigner si type acceleration
+	public float dashSpeed, dashDistance; //a renseigner si type dash
+};
+
 public enum AttackType
 {
 	CAST,
 	DASH,
+	ACCEL,
 	MELEE,
 };
 
@@ -35,16 +43,17 @@ public class Attack
 	private string _animFloatName;
 	public string AnimFloatName { get { return _animFloatName; } }
 
-	//si l'attaque est un cast alors on a besoin de la balle
-	private GameObject _bullet;
+	//contient differentes donnees selon le type d'attaque
+	private AttackData _attackData;
 
-	//constructeur
-	public Attack(AttackType type, float cooldown, KeyCode key, string animFloat, float chargeCooldown = 0.0F)
+	//constructeur (et damage?)
+	public Attack(AttackType type, float cooldown, KeyCode key, string animFloat, AttackData attackData, float chargeCooldown = 0.0F)
 	{
 		_type = type;
 		_cooldown = cooldown;
 		_key = key;
 		_animFloatName = animFloat;
+		_attackData = attackData;
 	}
 
 	//fonction de lancement de l'attaque
@@ -52,31 +61,49 @@ public class Attack
 	{
 		_nextFireTime = Time.time + _cooldown;
 		yield return new WaitForSeconds(_chargeCooldown);
-		if (_type == AttackType.CAST)
-		{
-			var bullet_clone = Object.Instantiate(_bullet, emitter.transform.position + Vector3.up + emitter.transform.forward * 2, emitter.transform.rotation) as GameObject;
-			//un peu plus haut qu'au sol, et un peu plus en avant par rapport au perso  
-			var bullet_script = bullet_clone.GetComponent<dummy_bullet>();
-			if (bullet_script != null)
-				bullet_script.setOriginGameObject(emitter);
+		var moveScript = emitter.GetComponent<Move>() as Move;
+		switch(_type)
+		{       
+			case AttackType.CAST:
+				GameObject bullet = _attackData.bullet;
+				var bullet_clone = Object.Instantiate(bullet, emitter.transform.position + Vector3.up + emitter.transform.forward * 2, emitter.transform.rotation) as GameObject;
+				//un peu plus haut qu'au sol, et un peu plus en avant par rapport au perso  
+				var bullet_script = bullet_clone.GetComponent<dummy_bullet>();
+				if (bullet_script != null)
+					bullet_script.setOriginGameObject(emitter);
 
-			NetworkServer.Spawn(bullet_clone); //need to make the network server spawn everywhere (on each client) the bullet_clone
+				NetworkServer.Spawn(bullet_clone); //need to make the network server spawn everywhere (on each client) the bullet_clone
+				break;
+		
+			case AttackType.ACCEL:
+				if(null != moveScript)
+				{
+					float origspeed = moveScript.speed;
+					moveScript.speed = _attackData.accelSpeed;
+					yield return new WaitForSeconds(1.0F);
+					moveScript.speed = origspeed;
+				}
+				break;
+		
+			case AttackType.DASH:
+				if(null != moveScript)		
+				{
+					bool dashNotFinish = true;
+					//moveScript"2" parce qu'en C# les "case" sont apparement dans le meme scope... --'
+					moveScript.lockMove();
+					Vector3 origPos = emitter.transform.position; 
+					while(dashNotFinish)
+					{
+						emitter.transform.position += emitter.transform.forward * _attackData.dashSpeed *Time.deltaTime;
+						if(Vector3.Distance(origPos, emitter.transform.position) < _attackData.dashDistance)
+							yield return null;
+						else
+							dashNotFinish = false;
+					}
+					moveScript.unlockMove();
+					moveScript.stopMove(); //sinon il va tenter d'aller a la position precedemment demandee
+				}
+				break;
 		}
-		else if (_type == AttackType.DASH)
-		{//not an actual dash attack, just an acceleration during 1 sec, need to change that
-			var moveScript = emitter.GetComponent<Move>() as Move;
-			float origspeed = moveScript.speed;
-			moveScript.speed = 12.0F;
-			yield return new WaitForSeconds(1.0F);
-			moveScript.speed = origspeed;
-		}
-	}
-
-	public void setBullet(GameObject bullet)
-	{
-		if (AttackType.CAST != _type)
-			return;
-
-		_bullet = bullet;
 	}
 }

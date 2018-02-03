@@ -11,6 +11,7 @@ public class Move : NetworkBehaviour
 	private Vector3 targetPos = Vector3.zero;
 	private Vector3 moveDirection = Vector3.zero;
 	private bool moveAsked = false;
+	private bool _lock = false;
 
 	public override void OnStartLocalPlayer()
 	{
@@ -26,6 +27,9 @@ public class Move : NetworkBehaviour
 	{
         
 		if(!isLocalPlayer)
+			return;
+
+		if(_lock)
 			return;
 
 		if(Input.GetMouseButton(0))
@@ -68,6 +72,16 @@ public class Move : NetworkBehaviour
 	{
 		Rigidbody rb = GetComponent<Rigidbody>();
 		rb.velocity = Vector3.up * jumpSpeed;
+	}
+
+	public void lockMove()
+	{
+		_lock = true;
+	}
+
+	public void unlockMove()
+	{
+		_lock = false;
 	}
 
 }
