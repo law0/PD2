@@ -1,0 +1,114 @@
+Volor-skill
+
+Ecole de la furtivité :
+Pas vu pas pris :
+
+Type : Utilitaire
+	Cible :  Soi-même	
+	CD : ??
+	Description : Le volor devient invisible durant x secs. Toute action autre que se déplacer mettra fin à l’invisibilité.
+
+Foulé du truand :
+
+Type : Utilitaire
+	Cible : soi-même
+	CD : ??
+	Description : Se téléporte à l’endroit cibler.
+
+Ce n’est pas finie ! :
+
+Type : Utilitaire / Buff
+	Cible : Ennemie
+	CD : ??
+	Description : Se téléporte derrière le dernier ennemi blessé dans les x secs. L’ennemi ciblé subit alors x % dégât supplémentaire du volor.
+
+Attrape-moi si tu peux :
+
+Type : Damage
+	Cible : Ennemi
+	CD : ??
+	Description : Le voleur disparait un instant et réapparait (avec un clone) de part et d’autre de l’ennemie ciblé. Les positions du volor et du clone sont verrouillés autour de l’ennemi ciblé tant que le sort ne prend pas fin. Si l’ennemi frappe le clone ou s’il ne frappe ni le clone ni le volor dans les x sec alors il subit x points de dégâts. Si l’ennemi frappe le volor alors la compétence prends fin.
+
+
+ULT :  LSD
+
+Type : Utilitaire
+	Cible : Ennemi
+	CD : ??
+	Description : Les ennemis sont pris dans une illusion qui brouille leurs visions. En plus de cela, leurs directions sont inversées.
+
+
+Ecole de l’assassinat
+
+Lancer de dague :
+
+Type : Damage / skillshot
+	Cible : Ennemi
+	CD : ??
+	Description :  Le volor envoie un couteau qui inflige x dégats. Si la cible est touchée dans le dos, le couteau inflige x degats supplémentaire (x dégat total).
+
+La ou ça fait mal :
+
+Type : Buff
+	Cible : soi-même
+	CD : ??
+	Description : Obtient un buff améliorant ses chances de coup critique et ses dégats de critique pendant x secs
+
+Bombe Fumigène
+
+Type : Utilitaire / damage / aoe
+	Cible : ennemi
+	CD : ??
+	Description : Lance une bombe fumigène qui inflige x dégât toutes les x sec pendant x secs a tous les ennemis présents dans la fumée. De plus, empêche les ennemies à l’extérieur de la fumée de voir à l’intérieur et vice versa
+
+Un boulet pas si inutile
+
+Type : Damage / cc
+	Cible : Ennemi
+	CD : ??
+	Description : Le volor envoie bouler son boulet et sa cible avec infligeant x dégâts et le repoussant.
+
+ULT : Personne ne bouge
+
+Type : Damage
+	Cible : Ennemie
+	CD : ??
+	Description : Durant les x prochaines secondes, tout ennemis se déplaçant subit x dégâts.
+
+Ecole de la fourberie :
+
+Epargne moi :
+
+Type : CC
+	Cible : ennemi
+	CD : ??
+	Description : Le volor reste accrocher à l’ennemi ciblé restant tout deux immobiliser.
+
+Vol, bah vous vous attendiez à quoi ?
+
+Type : utilitaire /ciblé
+	Cible : Ennemi
+	CD : ??
+	Description : le volor vole ce qu’il y a dans les mains de l’ennemie ciblé.
+
+Changement d’apparence 
+
+Type : utilitaire
+	Cible : soi-même 
+	CD : ??
+	Description : Permet au volor de se transformé en élément du décors / caisses ou coffre.
+
+ULT : 
+
+Type : Utilitaire
+	Cible : Coffre
+	CD : ??
+	Description : L’équipe adverse perd la vision procuré par le coffre. 
+ 
+
+ 
+
+
+
+
+ 

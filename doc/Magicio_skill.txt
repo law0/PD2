@@ -1,0 +1,128 @@
+ Magicio
+
+Ecole de la mobilité
+-Blink caster :
+	Type : Déplacement
+	Cible : null
+	Cd : ?
+	Description : téléportation qui prend lieu après une cana
+-Come back :
+	Type : Déplacement
+	Cible : null
+	Cd :?
+	Description : aux premier cast le magicio laisse une marque. Si le sort et utiliser une nouvelle fois dans les x secs, le magicio peut alors revenir instantanément sur la marque.
+-Maitre en la matière
+	Type : Déplacement
+	Cible : Mur 
+	Cd : ?
+	Description : Créer un portail sur un mur durant x secs permettant à tous de traversé le mur.
+-trone de fer :
+
+	Type : Déplacement / CC
+	Cible : soi/ ennemi
+	Cd : ??
+	Descrption : Invoque une armée de squelette qui …. Porte des latrines en fer et transporte le magicio qui se munie de sa canne afin de se déplacer plus vite. A la fin de la compétence, déclenche un fear de zone nauséabonde.
+Ult :
+	Type : Déplacement / Damage /Ciblé
+	Cible : Allié / Ennemie
+	Cd : ?
+	Description : Intervertit sa place avec l’allié ou l’ennemie ciblé
+
+Ecole de la sorcellerie
+-Drain
+	Type : Damage / Monocible / Ciblé
+	Cible : Ennemie
+	Cd : ?
+	Description : Draine la vie d’un ennemi. Le sort est maintenu tant que le magicio maintient la touche ou pendant 5 secs. Le magicio à une vitesse réduite lorsqu’il draine.
+-Crac
+	Type : Damage / Aoe
+	Cible : Zone
+	Cd : ?
+	Description : Après une canalisation de x secs, la magicio appelle son dealer et fait tomber un gros sac de crac à l’endroit ciblé infligeant de lourds dommages
+
+-Maitre du temps :
+	Type : CC / AOE
+	Cible : Zone	
+	Cd : ?
+	Description : Le magicio se concentre et délimite une zone dans laquelle il arrête le temps pendant x secs
+
+-Sort de trévis
+	Type : CC / Ciblé
+	Cible :  Ennemie
+	Cd : ?
+	Description : le magicio drogue un ennemi ce qui trouble sa vision et lui fait voire des étoiles et des faucons kamikazes
+
+ULT : Les ombres du faucon kamikaze
+Type : Aoe zone / cone ?
+	Cible :  Ennemie
+	Cd : ?
+	Description : Le magicio utilise les arcanes obscurs légué par sa dame de ménage afin de donner vie à l’ombre de chaque ennemie touchée. L’ombre vit durant x secs et reproduit les sorts lancés par son hôte. Les compétences lancées par l’ombre sont dirigées vers son hôte.
+
+
+
+
+
+Ecole élémentaire
+-Tremblement de terre 
+Type : Damage / aoe
+	Cible :  ennemie
+	Cd : ?
+	Description : Créer un tremblement de terre durant x secs. Tout ennemie se trouvant dans la zone est ralentit et subit des dégâts tant qu’il reste dans la zone.
+
+-Goutte d’eau
+
+Type : CC /aoe
+	Cible :  ennemie
+	Cd : ?
+	Description : Une (grosse) goutte d’eau tombe du ciel à l’endroit ciblé, repoussant tout ennemies touché vers l’extérieur de la goutte.
+
+-Eclair
+
+Type : Damage /ciblé
+	Cible :  ennemie
+	Cd : ?
+	Description : lance un éclair mortel sur la cible infligeant de lourds dégâts.
+
+-Mur de glace
+
+Type : Cc
+	Cible :  All
+	Cd : ?
+	Description : Erige un mur de glace 
+
+Ult : Combinaison des éléments ? 
+
+En utilisant deux magies élémentaires dans une même zone, le magicio combine ses sorts ce qui ajoutent des effets supplémentaires.
+
+Terre + eau : le tremblement de terre se transforme en gadou (ou en sable mouvant) et devient immobilisant
+
+Terre+ Glace : le magicio créer une zone d’ére glaciaire. Le ralentissement devient crescendo et au bout de x secs dans la zone, l’ennemie est gelée
+
+ Terre + foudre : L’éclair lancer par le magicio se répand dans le sol et créer une zone électromagnétique qui permet au tremblement de terre d’infliger des dégâts supplémentaires.
+
+Eau + Eclair : l’éclair lancer par le magicio se répand sur tous les ennemies proches récemment touché par la goutte.
+
+Eau + Glace : les ennemis récemment touchés par la gouttes d’eau sont gelé par le froid du mur de glace
+
+Glace + Eclair : la magicio se déplace aussi vite que la foudre tout en annulant toutes force de friction. Sa vitesse est grandement améliorée.
+
+Feu + terre : Les alliés touchés voit leur attaque devenir enflammé infligent x dégâts supplémentaire en x sec pendant x sec
+
+Feu+ Eau : zone de vapeur bloquant la vision
+
+Feu + Glace : Le feu fait fondre la glace qui se transforme en flaque d’eau régénérant
+
+Feu + Foudre : créer un deuxième clone.
+  
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,176 @@
+Arrowkion
+
+Ecole du Loup :
+
+Flèche de cupidon : 
+Type : skill shot / damage / cc 
+Cible : Ennemie puis ennemie / allié / élément du décor
+CD : ??
+Description : Arrowkion tire une première flèche sur un ennemie infligeant x dégats. Si elle parvient à toucher un ennemie, Arrowkoin peut alors utiliser une seconde fois le sort sur un autre ennemi, allié ou élément du décor. Les deux cibles sont alors tirées l’une vers l’autre.
+
+Fil barbelé :
+Type : Damage / aoe 
+Cible : Elément du décor
+CD : ?
+Description : Arrowkion tire une première flèche sur un mur, puis une seconde flèche sur un deuxième mur proche, déployant entre ses flèches un mur de barbelé. Tous ennemies passant au travers de ce mur voit sa vitesse réduite de x durant x secs et se prenant x dégâts tous les x secs s’il reste dans le mur de barbelé. Le mur est déployé pendant x secs.
+
+Mine anti-personnel :
+
+Type : Damage / aoe
+
+Cible : Ennemie
+
+CD : ?
+
+Description : Pose un piège qui s’active si un ennemi marche dessus. A l’activation la mine explose infligeant x dégats en zone / résultant à une zone enflammer infligeant x dégât en x sec.
+
+
+
+
+
+
+
+Ce n’est pas fini ! : 
+
+Type : CC	
+
+Cible : Ennemie
+
+CD : ?
+
+Description : Pose un piège qui s’active lorsqu’un ennemi marche dessus. L’ennemi est alors marqué durant x secs. Si un ennemi marqué est touché par un autre piège, il se prend alors des dégâts supplémentaires équivalant à x et est étourdie durant x secs.
+
+
+ULT : 
+
+Type : déplacement
+
+Cible : Allié / Ennemi
+
+CD : ?
+
+Description : Arrowkion peut poser deux dispositifs qui subsistent pendant x secs. Marcher sur un des dispositifs téléporte l’unité à l’emplacement du second. Le dispositif n’est utilisable qu’une seule fois par personne.
+
+
+Ecole du faucon :
+
+
+Pas si vite :
+
+Type : Damage/ cc / (skillshot/ciblé ?)
+
+Cible : Ennemi 
+
+CD : ?
+
+Description : Arrowkion tire une fléche qui (repousse ?) et inflige x dégâts. La position initiale de l’ennemi est marquée. Au bout de x secs, l’ennemie touché est téléporté à la position marquée.
+
+
+Arrowkion de la jungle :
+
+Type : Déplacement / (damage ?)
+
+Cible : Elément du décor 
+
+CD : ?
+
+Description : Arrowkion tire un grappin sur un mur et s’envole vers celui-ci. (si il rentre en contact avec un ennemi lors de son déplacement, il lui inflige alors x dégats ?)
+
+
+Tir perçant
+
+Type : Damage/ aoe / skillshot
+
+Cible : Ennemi	
+
+CD : ?
+
+Description : Arrowkion tire une flèche perçante infligeant x dégâts 
+
+Agilité du faucon : 
+
+Type : Déplacement / Buff / ciblé
+
+Cible : Ennemie
+
+CD : ?
+
+Description : Arrowkion saute derrière l’ennemie ciblé puis prends appuie sur lui afin de creusé un écart. L’ennemi ciblé est alors marqué durant x secs. Arrowkion inflige des dégâts supplémentaires sur les ennemis marqués. ( Arrokion dispose alors de x secs pour réutiliser agilité du faucon deux fois.)
+
+
+
+
+
+
+
+
+ULT : 
+
+Type : Déplacement / damage / across  the map
+
+Cible : Ennemie
+
+CD : ?
+
+Description : Arrowkion invoque un faucon/loup (se transforme en fléche ? ) et se déplace en ligne droite à grande vitesse. A la réactivation ou lorsque qu’elle rencontre un ennemie le sort prend fin et elle inflige des dégâts autour d’elle. 
+
+
+Ecole de l’ours
+
+Salve de fléche
+
+Type : Damage / aoe
+
+Cible : Ennemi
+
+CD : ?
+
+Description : Tire une salve de x flèches en éventail infligeant chacun x dégâts 
+
+Pluie de fléche
+
+Type : Damage/ Aoe
+
+Cible : Ennemi
+
+CD : ?
+
+Description : Tire une pluie de flèche dans une zone infligeant x dégâts tous les x secs aux ennemis dans la zone. Le sort est maintenu tant que Arrowkion reste immobile ou qu’elle soit interrompue.
+
+
+
+
+
+
+
+
+Fleche à retardement :
+
+Type : Damage / aoe/ Skillshot
+
+Cible : Ennemie 
+
+CD : ?
+
+Description :  Tire une flèche munie d’explosif sur un ennemie. Après x secs, la fléche explose infligeant x dégâts.
+
+Flèche de glace :
+
+Type : Damage / skillshot / CC
+
+Cible : Ennemi
+
+CD : ?
+
+Description : Tire une flèche de glace (étourdissant l’ennemi touché pendant x sec / créant une zone qui ralentit les ennemies) et inflige x dégâts.
+
+ULT :
+
+Type : Utilitaire
+
+Cible : Trésors
+
+CD : ?
+
+Description : Appelle un ours sur un nuage qui porte le trésor le rendant intouchable durant x secs. L’ours suit arrowkion pendant la durée du sort.
+
