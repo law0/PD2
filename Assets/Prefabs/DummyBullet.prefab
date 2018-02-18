@@ -19,11 +19,11 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4695838380518320}
-  - component: {fileID: 114279135392529108}
   - component: {fileID: 114797729340876848}
   - component: {fileID: 114735153125851730}
   - component: {fileID: 54458139952647142}
   - component: {fileID: 135030079250350262}
+  - component: {fileID: 114188158560894030}
   m_Layer: 0
   m_Name: DummyBullet
   m_TagString: Untagged
@@ -106,7 +106,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &114279135392529108
+--- !u!114 &114188158560894030
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -114,11 +114,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1154856016790168}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5836e526bbdc1e45b3907865632dbb6, type: 3}
+  m_Script: {fileID: 11500000, guid: 2b73a7168b7f1124eac0f2ac87751cb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 15
-  distanceToLive: 15
+  speed: 10
+  distanceToLive: 5
 --- !u!114 &114735153125851730
 MonoBehaviour:
   m_ObjectHideFlags: 1

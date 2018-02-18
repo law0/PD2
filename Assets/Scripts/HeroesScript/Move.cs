@@ -13,11 +13,6 @@ public class Move : NetworkBehaviour
 	private bool moveAsked = false;
 	private bool _lock = false;
 
-	public override void OnStartLocalPlayer()
-	{
-		tag = "LocalPlayer";
-	}
-
 	void Start()
 	{
         anim = transform.GetComponent<Animator>();

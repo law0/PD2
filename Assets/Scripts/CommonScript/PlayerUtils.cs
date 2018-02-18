@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerUtils : MonoBehaviour {
 
+	public static List<Init> PlayerList = new List<Init>();
+
 	public static Plane groundPlane = new Plane(new Vector3(0.0F, 1.0F, 0.0F), new Vector3(0.0F, 0.0F, 0.0F));
 
 		//get where mouse point
@@ -25,5 +27,21 @@ public class PlayerUtils : MonoBehaviour {
 		lea.x *= 0.0F;
 		lea.z *= 0.0F;
 		obj.transform.eulerAngles = lea;
+	}
+
+	public static List<GameObject> getPlayerIn3DRadius(Vector3 pos, float radius)
+	{
+		var returnList = new List<GameObject>();
+		foreach (Init i in PlayerList)
+		{
+			if (Vector3.Distance(i.gameObject.transform.position, pos) < radius)
+				returnList.Add(i.gameObject);
+		}
+		return returnList;
+	}
+
+	public static GameObject selectedPlayer()
+	{
+		return null;
 	}
 }
