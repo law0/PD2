@@ -17,13 +17,17 @@ public class AttackSystem : NetworkBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
+		//pense a faire les dégats aussi un jour...
 		AttackData castData = new AttackData(); castData.bullet = bullets[0];
 		AttackData accelData = new AttackData(); accelData.accelSpeed = 12.0F;
 		AttackData dashData = new AttackData(); dashData.dashSpeed = 18.0F; dashData.dashDistance = 5.0F;
+		AttackData tpData = new AttackData(); tpData.tpDistance = 5.0F;
 
 		attacks.Add(new Attack(AttackType.CAST, 0.5F, KeyCode.A, "cast_attack", castData));
 		attacks.Add(new Attack(AttackType.ACCEL, 1.0F, KeyCode.Z, "accel_attack", accelData));
 		attacks.Add(new Attack(AttackType.DASH, 1.0F, KeyCode.E, "dash_attack", dashData));
+		attacks.Add(new Attack(AttackType.MELEE, 1.0F, KeyCode.R, "cast_attack", dashData)); //on s'en fout de AttackData, ici compte l'animation
+		attacks.Add(new Attack(AttackType.TP, 1.0F, KeyCode.T, "tp_attack", tpData));
 
 		anim = transform.GetComponent<Animator>();
 	}

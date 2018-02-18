@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public struct AttackData
+public struct AttackData //données spécifique à chaque attaque
 {
 	public GameObject bullet; //a renseigner si type cast
 	public float accelSpeed; //a renseigner si type acceleration
 	public float dashSpeed, dashDistance; //a renseigner si type dash
+	public float tpDistance; //a renseigner si type TP
 };
 
 public enum AttackType
@@ -16,6 +17,7 @@ public enum AttackType
 	DASH,
 	ACCEL,
 	MELEE,
+	TP,
 };
 
 public class Attack
@@ -89,7 +91,6 @@ public class Attack
 				if(null != moveScript)		
 				{
 					bool dashNotFinish = true;
-					//moveScript"2" parce qu'en C# les "case" sont apparement dans le meme scope... --'
 					moveScript.lockMove();
 					Vector3 origPos = emitter.transform.position; 
 					while(dashNotFinish)
@@ -102,6 +103,20 @@ public class Attack
 					}
 					moveScript.unlockMove();
 					moveScript.stopMove(); //sinon il va tenter d'aller a la position precedemment demandee
+					//damage ?
+				}
+				break;
+
+			case AttackType.MELEE:
+				//rien en fait, puisqu'il y a juste l'animation a faire
+				//damage ?
+				break;
+
+			case AttackType.TP:
+				if(null != moveScript)
+				{
+					emitter.transform.position += emitter.transform.forward * _attackData.tpDistance;
+					moveScript.stopMove(); //sinon il va tenter d'aller a la position precedemment demandee 
 				}
 				break;
 		}
