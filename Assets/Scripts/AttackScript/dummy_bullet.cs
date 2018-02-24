@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class dummy_bullet : MonoBehaviour {
+public class dummy_bullet : NetworkBehaviour {
 	public float speed;
 	public float distanceToLive = 2.0F;
 	private Vector3 startingPoint;
@@ -62,5 +62,11 @@ public class dummy_bullet : MonoBehaviour {
 			statSystem.stats["health"].substract(10);
 			Destroy(gameObject);
 		}
+	}
+
+	public void spawn()
+	{
+		if (isServer)
+			NetworkServer.Spawn(gameObject);
 	}
 }

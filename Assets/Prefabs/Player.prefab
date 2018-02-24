@@ -1411,7 +1411,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullets:
   - {fileID: 1154856016790168, guid: f17b8f49081af12429fc3744b021a4dd, type: 2}
-  - {fileID: 0}
+  - {fileID: 1352786158832886, guid: 912bac7477618a146ab81e9fd7b64390, type: 2}
 --- !u!136 &136734117512898780
 CapsuleCollider:
   m_ObjectHideFlags: 1

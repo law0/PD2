@@ -13,6 +13,11 @@ public class Init : NetworkBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		PlayerUtils.PlayerList.Add(this);	
+		PlayerUtils.PlayerList.Add(gameObject);
+		StatSystem statSystem = GetComponent<StatSystem>();
+		if (null != statSystem)
+		{
+			statSystem.die(); // pour synchro toutes les vies a 100
+		}
 	}
 }

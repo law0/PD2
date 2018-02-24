@@ -20,5 +20,18 @@ public class StatSystem : NetworkBehaviour
 			stats.Add(stat.statName, stat);
 		}
 	}
+
+	public void die()
+	{
+		Stat health = stats["health"];
+		if (null != health)
+		{
+			health.substract(3000.0F);
+		}
+		else
+		{
+			Debug.LogError("can't die : no health!");
+		}
+	}
 }
 

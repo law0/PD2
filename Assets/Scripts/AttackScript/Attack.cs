@@ -14,8 +14,9 @@ public struct AttackData //données spécifique à chaque attaque
 	public float meleeDamageRadius; //a renseigner si type melee
 	public float tpDistance; //a renseigner si type TP
 	public ApplyToOther applyToOther; //fonction qui s'appliquera sur l'objet ciblé ou atteint (e.g pour appliquer les dégats)
-	//pourquoi une fonction? c'est compliqué... pour par exemple les damages over time ou pour les knockbacks : pour pouvoir appliquer
-	//des choses plus compliqué que des dégats
+									  //pourquoi une fonction? c'est compliqué... pour par exemple les damages over time ou pour les knockbacks : pour pouvoir appliquer
+									  //des choses plus compliqué que des dégats
+	public float cibleeRadius; //si ciblee (auto_attack) -> rayon dans lequel l'autoattack marche
 };
 
 public enum AttackType
@@ -83,9 +84,11 @@ public class Attack
 				//un peu plus haut qu'au sol, et un peu plus en avant par rapport au perso  
 				var bullet_script = bullet_clone.GetComponent<dummy_bullet>();
 				if (bullet_script != null)
+				{
 					bullet_script.setOriginGameObject(emitter);
-
-				NetworkServer.Spawn(bullet_clone); //need to make the network server spawn everywhere (on each client) the bullet_clone
+					bullet_script.spawn();
+				}
+				NetworkServer.Spawn(bullet_clone);
 				break;
 		
 			case AttackType.ACCEL:
@@ -140,14 +143,20 @@ public class Attack
 				break;
 
 			case AttackType.CIBLEE:
-				GameObject tbullet = _attackData.bullet;
-				var tbullet_clone = Object.Instantiate(tbullet, emitter.transform.position + Vector3.up + emitter.transform.forward * 2, emitter.transform.rotation) as GameObject;
-				//un peu plus haut qu'au sol, et un peu plus en avant par rapport au perso  
-				var tbullet_script = tbullet_clone.GetComponent<dummy_bullet>();
-				if (tbullet_script != null)
-					tbullet_script.setOriginGameObject(emitter);
-
-				NetworkServer.Spawn(tbullet_clone); //need to make the network server spawn everywhere (on each client) the bullet_clone
+				GameObject target = PlayerUtils.clickedOnPlayer(_key);
+				if(null != target && Vector3.Distance(emitter.transform.position, target.transform.position) < _attackData.cibleeRadius)
+				{
+					GameObject bullet_ciblee = _attackData.bullet;
+					var bullet_ciblee_clone = Object.Instantiate(bullet_ciblee, emitter.transform.position + Vector3.up + emitter.transform.forward * 2, emitter.transform.rotation) as GameObject;
+					//un peu plus haut qu'au sol, et un peu plus en avant par rapport au perso  
+					var bullet_ciblee_script = bullet_ciblee_clone.GetComponent<BulletCiblee>();
+					if (bullet_ciblee_script != null)
+					{
+						bullet_ciblee_script.setOriginGameObject(emitter);
+						bullet_ciblee_script.setTarget(target);
+					}
+					//comment faire spawn sur le server sachant que sur le server ces conditions ne sont pas vrai?
+				}
 				break;
 				
 				

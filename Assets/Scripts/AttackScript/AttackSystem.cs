@@ -35,11 +35,14 @@ public class AttackSystem : NetworkBehaviour {
 
 		var tpData = new AttackData(); tpData.tpDistance = 5.0F;
 
+		var cibleeData = new AttackData(); cibleeData.cibleeRadius = 20.0F; cibleeData.bullet = bullets[1];
+
 		attacks.Add(new Attack(AttackType.CAST, 0.5F, KeyCode.A, "cast_attack", castData));
-		attacks.Add(new Attack(AttackType.ACCEL, 1.0F, KeyCode.Z, "accel_attack", accelData));
-		attacks.Add(new Attack(AttackType.DASH, 1.0F, KeyCode.E, "dash_attack", dashData));
-		attacks.Add(new Attack(AttackType.MELEE, 1.0F, KeyCode.R, "melee_attack", meleeData));
-		attacks.Add(new Attack(AttackType.TP, 5.0F, KeyCode.T, "tp_attack", tpData));
+		//attacks.Add(new Attack(AttackType.ACCEL, 1.0F, KeyCode.Z, "accel_attack", accelData));
+		//attacks.Add(new Attack(AttackType.DASH, 1.0F, KeyCode.E, "dash_attack", dashData));
+		//attacks.Add(new Attack(AttackType.MELEE, 1.0F, KeyCode.R, "melee_attack", meleeData));
+		//attacks.Add(new Attack(AttackType.TP, 5.0F, KeyCode.T, "tp_attack", tpData));
+		attacks.Add(new Attack(AttackType.CIBLEE, 1.0F, KeyCode.Mouse0, "cast_attack", cibleeData));
 
 		anim = transform.GetComponent<Animator>();
 	}
