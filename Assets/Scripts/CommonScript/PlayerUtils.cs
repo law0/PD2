@@ -11,6 +11,8 @@ public class PlayerUtils : NetworkBehaviour {
 
 	public static GameObject lastSelectedPlayer = null;
 
+	public static int lastClickOnPlayerIndex = -1;
+
 		//get where mouse point
 	public static void GetMouse3DPosition(ref Vector3 target)
 	{
@@ -43,7 +45,7 @@ public class PlayerUtils : NetworkBehaviour {
 		return returnList;
 	}
 
-	public static GameObject clickedOnPlayer(KeyCode code)
+	public static int clickedOnPlayer(KeyCode code)
 	{
 		if (Input.GetKey(code))
 		{
@@ -54,15 +56,34 @@ public class PlayerUtils : NetworkBehaviour {
 				if (Physics.Raycast(ray, out hit) && hit.transform.gameObject == player)
 				{
 					lastSelectedPlayer = player;
-					return player;
+					return PlayerList.IndexOf(player);
 				}
 			}
 		}
-		return null;
+		return -1;
 	}
 
 	public static void spawn(GameObject obj)
 	{
 		NetworkServer.Spawn(obj);
+	}
+
+	void Update()
+	{
+		if (isLocalPlayer)
+		{
+			int index = clickedOnPlayer(KeyCode.Mouse0);
+			if (index != lastClickOnPlayerIndex)
+			{
+				CmdClickedOnPlayer(index);
+				lastClickOnPlayerIndex = index;
+			}
+		}
+	}
+
+	[Command]
+	public void CmdClickedOnPlayer(int index)
+	{
+		lastClickOnPlayerIndex = index;
 	}
 }

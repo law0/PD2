@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public delegate void StatCallback(float v);
 
@@ -10,7 +9,7 @@ public delegate void StatCallback(float v);
 //+ system de callback. Pour ajouter une fonction callback a appeler a chaque fois que la valeur change, il suffit de faire stat.callbackList.Add(function_name)
 //la signature de la fonction de callback doit etre "public void function_name(float v)"
 //voir exemple dans Respawn.cs
-public class Stat : NetworkBehaviour 
+public class Stat : MonoBehaviour 
 {
 	public float val;
 
@@ -21,69 +20,18 @@ public class Stat : NetworkBehaviour
 
 	public List<StatCallback> callbackList = new List<StatCallback>();
 
-	[ClientRpc] //called on server; executed on client
-	public void RpcUpdateValue(float v) //used to propagate value back to clients (note it is also called on server);
+	public void onValueChange()
 	{
-		if(isServer)
-			PD2Debug.Log("RpcUpdateValue(" + v + ") called on server");
-
-		if(isClient)
-			PD2Debug.Log("RpcUpdateValue(" + v + ") called on client");
-		val = v;
-		onValueChange(v);
-	}
-
-	public void onValueChange(float v)
-	{
-		if(isServer)
-			PD2Debug.Log("onValueChange(" + v +") called on server");
-
-		if (isClient)
-			PD2Debug.Log("onValueChange(" + v + ") called on client");
 		foreach (StatCallback callback in callbackList)
 		{
-			callback(v);
+			callback(val);
 		}
-	}
-
-	[Server]
-	protected void assignCheckLimits(float v)
-	{
-		if (v < min)
-			v = min;
-		if (v > max)
-			v = max;
-		PD2Debug.Log("assignCheckLimits(" + v + ") called on server");
-		RpcUpdateValue(v);
-		PD2Debug.Log("RpcUpdateValue(" + v + ") calling from server");
-	}
-
-	public float getValue()
-	{
-		return val;
 	}
 
 	public void setValue(float v)
 	{
-		if (!isServer)
-			return;
+		val = v;
 		PD2Debug.Log("setValue(" + v + ") called on server");
-		assignCheckLimits(v);
-	}
-
-	public void add(float v)
-	{
-		if (!isServer)
-			return;
-		PD2Debug.Log("add(" + v + ") called on server");
-		assignCheckLimits(val + v);
-	}
-
-	public void substract(float v)
-	{
-		if (!isServer)
-			return;
-		PD2Debug.Log("substract(" + v + ") called on server");
-		assignCheckLimits(val - v);
+		onValueChange();
 	}
 }

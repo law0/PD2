@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class dummy_bullet : NetworkBehaviour {
 	public float speed;
 	public float distanceToLive = 2.0F;
+	public float damage;
 	private Vector3 startingPoint;
 	private GameObject originGameObject;
 
@@ -59,14 +60,8 @@ public class dummy_bullet : NetworkBehaviour {
 		var statSystem = other.GetComponent<StatSystem>();
 		if (statSystem != null && other.gameObject != originGameObject)
 		{
-			statSystem.stats["health"].substract(10);
+			statSystem.substract("health", damage);
 			Destroy(gameObject);
 		}
-	}
-
-	public void spawn()
-	{
-		if (isServer)
-			NetworkServer.Spawn(gameObject);
 	}
 }

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 public class AttackSystem : NetworkBehaviour {
 
@@ -11,39 +14,11 @@ public class AttackSystem : NetworkBehaviour {
 
 	//code en dur a remplacer
 	//les attaques sont ici, a remplacer pour chargement "dynamique"
-	public List<Attack> attacks = new List<Attack>(); 
+	private Dictionary<string, Attack> attacks = new Dictionary<string, Attack>(); 
 
 	// Use this for initialization
 	void Start () 
 	{
-		//Faudra degager tout ça de la
-		var castData = new AttackData(); castData.bullet = bullets[0];
-		var accelData = new AttackData(); accelData.accelSpeed = 12.0F;
-		var dashData = new AttackData(); dashData.dashSpeed = 18.0F; dashData.dashDistance = 5.0F; dashData.dashDamageRadius = 0.5F;
-
-		dashData.applyToOther = other =>
-		{ //lambda function that apply 10 damage within dashData.dashDamageRadius
-			var otherStatSystem = other.GetComponent<StatSystem>() as StatSystem;
-			if (otherStatSystem != null && other != gameObject)
-			{
-				otherStatSystem.stats["health"].substract(10);
-			}
-		};
-
-		var meleeData = new AttackData(); meleeData.meleeDamageRadius = 0.5F;
-		meleeData.applyToOther = dashData.applyToOther; //juste la flemme de reecrire une deuxieme lambda function
-
-		var tpData = new AttackData(); tpData.tpDistance = 5.0F;
-
-		var cibleeData = new AttackData(); cibleeData.cibleeRadius = 20.0F; cibleeData.bullet = bullets[1];
-
-		attacks.Add(new Attack(AttackType.CAST, 0.5F, KeyCode.A, "cast_attack", castData));
-		//attacks.Add(new Attack(AttackType.ACCEL, 1.0F, KeyCode.Z, "accel_attack", accelData));
-		//attacks.Add(new Attack(AttackType.DASH, 1.0F, KeyCode.E, "dash_attack", dashData));
-		//attacks.Add(new Attack(AttackType.MELEE, 1.0F, KeyCode.R, "melee_attack", meleeData));
-		//attacks.Add(new Attack(AttackType.TP, 5.0F, KeyCode.T, "tp_attack", tpData));
-		attacks.Add(new Attack(AttackType.CIBLEE, 1.0F, KeyCode.Mouse0, "cast_attack", cibleeData));
-
 		anim = transform.GetComponent<Animator>();
 	}
 	
@@ -53,33 +28,112 @@ public class AttackSystem : NetworkBehaviour {
 		if (!isLocalPlayer)
 			return;
 
-		for (int index = 0; index < attacks.Count; ++index) //et pas un foreach parce qu'on a besoin de l'index
+		foreach (KeyValuePair<string, Attack> entry in attacks) //et pas un foreach parce qu'on a besoin de l'index
 		{//puisqu'on ne peut transmettre que des types basique a travers les Cmd et Rpc
-			if (Input.GetKeyDown(attacks[index].Key) && Time.time > attacks[index].NextFireTime)
+			if (Input.GetKeyDown(entry.Value.key) && Time.time > entry.Value.NextFireTime)
 			{
 				Vector3 attackDir = gameObject.transform.position; //init attackDir to current Position so that if the value is not updated in GetMouse3DPos... the player will not rotate nor move
 				PlayerUtils.GetMouse3DPosition(ref attackDir); //may update attackDir to the 3D MousePosition
 				PlayerUtils.LookAtY(gameObject, ref attackDir); //make the passed gameObject (here the player) look at where we click
 
 				//because networkanimator doesn't fuckin sync triggers automatically... and it still bugs
-				attacks[index].AnimFloat = 1.0F;
-				CmdAttack(index);
+				entry.Value.animFloat = 1.0F;
+				CmdAttack(entry.Key);
 			}
-			anim.SetFloat(attacks[index].AnimFloatName, attacks[index].AnimFloat);
-			attacks[index].AnimFloat = attacks[index].AnimFloat < 0 ? 0.0F : attacks[index].AnimFloat - 0.1F;
+			anim.SetFloat(entry.Value.animFloatName, entry.Value.animFloat);
+			entry.Value.animFloat = entry.Value.animFloat < 0 ? 0.0F : entry.Value.animFloat - 0.1F;
 		}
 	}
 
 	//[Command] functions are Asked by client but Called on the Server only
 	[Command]
-	public void CmdAttack(int attackIndex)
+	public void CmdAttack(string attackName)
 	{
-		RpcActualAttack(attackIndex);
+		RpcActualAttack(attackName);
 	}
 
 	[ClientRpc]
-	public void RpcActualAttack(int attackIndex)
+	public void RpcActualAttack(string attackName)
 	{
-		StartCoroutine(attacks[attackIndex].fire(gameObject));
+		StartCoroutine(attacks[attackName].fire(gameObject));
+	}
+
+
+	[Server]
+	public void resync()
+	{
+		foreach (KeyValuePair<string, Attack> entry in attacks)
+		{
+			Attack attack = entry.Value;
+			MemoryStream stream = new MemoryStream();
+			BinaryFormatter formatter = new BinaryFormatter();
+			try
+			{
+				formatter.Serialize(stream, attack.attackData);
+			}
+			catch (SerializationException e)
+			{
+				Debug.Log("Serialization Failed : " + e.Message);
+			}
+			byte[] objectAsBytes = stream.ToArray();
+			stream.Close();
+			RpcNewAttack(attack.attackName, attack.type, attack.cooldown, attack.damage, attack.key, attack.animFloatName, objectAsBytes, attack.chargeCooldown);
+		}
+	}
+
+	public void newAttack(string attackName, AttackType type, float cooldown, float damage, KeyCode key, string animFloat, AttackData attackData, float chargeCooldown = 0.0F)
+	{
+		MemoryStream stream = new MemoryStream();
+		BinaryFormatter formatter = new BinaryFormatter();
+		try
+		{
+			formatter.Serialize(stream, attackData);
+		}
+		catch (SerializationException e)
+		{
+			Debug.Log("Serialization Failed : " + e.Message);
+		}
+		byte[] objectAsBytes = stream.ToArray();
+		stream.Close();
+		CmdNewAttack(attackName, type, cooldown, damage, key, animFloat, objectAsBytes, chargeCooldown);
+	}
+
+	[Command]
+	public void CmdNewAttack(string attackName, AttackType type, float cooldown, float damage, KeyCode key, string animFloat, byte[] attackData, float chargeCooldown)
+	{
+		RpcNewAttack(attackName, type, cooldown, damage, key, animFloat, attackData, chargeCooldown);
+	}
+
+	[ClientRpc]
+	public void RpcNewAttack(string attackName, AttackType type, float cooldown, float damage, KeyCode key, string animFloat, byte[] attackData, float chargeCooldown)
+	{
+		if (!attacks.ContainsKey(attackName))
+		{
+			AttackData attackDataDeserialized = new AttackData();
+			MemoryStream stream = new MemoryStream();
+			stream.Write(attackData, 0, attackData.Length);
+			stream.Seek(0, SeekOrigin.Begin);
+			BinaryFormatter formatter = new BinaryFormatter();
+			try
+			{
+				attackDataDeserialized = (AttackData)formatter.Deserialize(stream);
+			}
+			catch (SerializationException e)
+			{
+				Debug.Log("Deserialization Failed : " + e.Message);
+			}
+			stream.Close();
+
+			Attack new_attack = gameObject.AddComponent<Attack>();
+			new_attack.attackName = attackName;
+			new_attack.type = type;
+			new_attack.cooldown = cooldown;
+			new_attack.key = key;
+			new_attack.animFloatName = animFloat;
+			new_attack.attackData = attackDataDeserialized;
+			new_attack.chargeCooldown = chargeCooldown;
+			new_attack.damage = damage;
+			attacks.Add(attackName, new_attack);
+		}
 	}
 }

@@ -42,12 +42,7 @@ public class BulletCiblee : NetworkBehaviour {
 		var target_statSystem = _target.GetComponent<StatSystem>() as StatSystem;
 		if (null != target_statSystem)
 		{
-			var health = target_statSystem.stats["health"] as Stat;
-			if (null != health)
-			{
-				health.substract(damage);
-				Destroy(gameObject);
-			}
+			target_statSystem.substract("health", damage);
 		}
 	}
 

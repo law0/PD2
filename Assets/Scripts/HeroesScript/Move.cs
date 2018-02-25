@@ -27,7 +27,7 @@ public class Move : NetworkBehaviour
 		if(_lock)
 			return;
 
-		if(Input.GetMouseButton(0) && PlayerUtils.clickedOnPlayer(KeyCode.Mouse0) == null)
+		if(Input.GetMouseButton(0) && PlayerUtils.clickedOnPlayer(KeyCode.Mouse0) == -1)
 		{
 			//targetPos is used to move the player
 			PlayerUtils.GetMouse3DPosition(ref targetPos);
