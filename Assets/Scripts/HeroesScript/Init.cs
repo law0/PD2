@@ -9,6 +9,7 @@ public class Init : NetworkBehaviour
 	public override void OnStartLocalPlayer()
 	{
 		tag = "LocalPlayer";
+
 		StatSystem statSystem = GetComponent<StatSystem>();
 		if (null != statSystem)
 		{
@@ -43,10 +44,10 @@ public class Init : NetworkBehaviour
 			cibleeData.bulletIndex = 1; //cherchera dans attackSystem.bullets[1];
 
 			attackSystem.newAttack("Simple cast", AttackType.CAST, 0.5F, 10.0F, KeyCode.A, "cast_attack", castData);
-			//attackSystem.newAttack("Simple Acceleration", AttackType.ACCEL, 1.0F, 0.0F, KeyCode.Z, "accel_attack", accelData);
-			//attackSystem.newAttack("Simple Dash", AttackType.DASH, 1.0F, 5.0F, KeyCode.E, "dash_attack", dashData);
-			//attackSystem.newAttack("Simple Cac", AttackType.MELEE, 1.0F, 5.0F, KeyCode.R, "melee_attack", meleeData);
-			//attackSystem.newAttack("Simple Tp", AttackType.TP, 5.0F, 0.0F, KeyCode.T, "tp_attack", tpData);
+			attackSystem.newAttack("Simple Acceleration", AttackType.ACCEL, 1.0F, 0.0F, KeyCode.Z, "accel_attack", accelData);
+			attackSystem.newAttack("Simple Dash", AttackType.DASH, 1.0F, 5.0F, KeyCode.E, "dash_attack", dashData);
+			attackSystem.newAttack("Simple Cac", AttackType.MELEE, 1.0F, 5.0F, KeyCode.R, "melee_attack", meleeData);
+			attackSystem.newAttack("Simple Tp", AttackType.TP, 5.0F, 0.0F, KeyCode.T, "tp_attack", tpData);
 			attackSystem.newAttack("Simple cast ciblee", AttackType.CIBLEE, 1.0F, 5.0F, KeyCode.Mouse0, "cast_attack", cibleeData);
 		}
 

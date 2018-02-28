@@ -11,8 +11,6 @@ public class PlayerUtils : NetworkBehaviour {
 
 	public static GameObject lastSelectedPlayer = null;
 
-	public static int lastClickOnPlayerIndex = -1;
-
 		//get where mouse point
 	public static void GetMouse3DPosition(ref Vector3 target)
 	{
@@ -72,11 +70,12 @@ public class PlayerUtils : NetworkBehaviour {
 	{
 		if (isLocalPlayer)
 		{
+			AttackSystem attackSystem = GetComponent<AttackSystem>();
 			int index = clickedOnPlayer(KeyCode.Mouse0);
-			if (index != lastClickOnPlayerIndex)
+			if (index != attackSystem.PlayerClickedIndex)
 			{
 				CmdClickedOnPlayer(index);
-				lastClickOnPlayerIndex = index;
+				//lastClickOnPlayerIndex = index;
 			}
 		}
 	}
@@ -84,6 +83,13 @@ public class PlayerUtils : NetworkBehaviour {
 	[Command]
 	public void CmdClickedOnPlayer(int index)
 	{
-		lastClickOnPlayerIndex = index;
+		RpcClickedOnPlayer(index);
+	}
+
+	[ClientRpc]
+	public void RpcClickedOnPlayer(int index)
+	{
+		AttackSystem attackSystem = GetComponent<AttackSystem>();
+		attackSystem.PlayerClickedIndex = index;
 	}
 }

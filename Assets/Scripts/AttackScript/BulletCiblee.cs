@@ -44,6 +44,7 @@ public class BulletCiblee : NetworkBehaviour {
 		{
 			target_statSystem.substract("health", damage);
 		}
+		Destroy(gameObject);
 	}
 
 	public void spawn()

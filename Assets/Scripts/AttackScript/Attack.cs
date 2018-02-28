@@ -84,7 +84,6 @@ public class Attack : MonoBehaviour
 					bullet_script.damage = damage;
 					bullet_script.setOriginGameObject(emitter);
 				}
-				NetworkServer.Spawn(bullet_clone);
 				break;
 
 			case AttackType.ACCEL:
@@ -108,7 +107,8 @@ public class Attack : MonoBehaviour
 						List<GameObject> dash_playersInRadius = PlayerUtils.getPlayerIn3DRadius(emitter.transform.position, attackData.dashDamageRadius);
 						foreach (GameObject player in dash_playersInRadius)
 						{
-							player.GetComponent<StatSystem>().substract("health", damage);
+							if(player != gameObject) //manquerait plus qu'on se fasse des dommages soit meme
+								player.GetComponent<StatSystem>().substract("health", damage);
 						}
 
 						emitter.transform.position += emitter.transform.forward * attackData.dashSpeed * Time.deltaTime;
@@ -139,7 +139,7 @@ public class Attack : MonoBehaviour
 				break;
 
 			case AttackType.CIBLEE:
-				int index = PlayerUtils.lastClickOnPlayerIndex;
+				int index = GetComponent<AttackSystem>().PlayerClickedIndex;
 				if (-1 != index)
 				{
 					GameObject target = PlayerUtils.PlayerList[index];
@@ -155,7 +155,6 @@ public class Attack : MonoBehaviour
 							bullet_ciblee_script.setOriginGameObject(emitter);
 							bullet_ciblee_script.setTarget(target);
 						}
-						NetworkServer.Spawn(bullet_ciblee_clone);
 					}
 				}
 				break;

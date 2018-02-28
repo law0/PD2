@@ -14,7 +14,20 @@ public class AttackSystem : NetworkBehaviour {
 
 	//code en dur a remplacer
 	//les attaques sont ici, a remplacer pour chargement "dynamique"
-	private Dictionary<string, Attack> attacks = new Dictionary<string, Attack>(); 
+	private Dictionary<string, Attack> attacks = new Dictionary<string, Attack>();
+
+	private int playerClickedIndex = -1;
+	public int PlayerClickedIndex
+	{
+		get
+		{
+			return playerClickedIndex;
+		}
+		set
+		{
+			playerClickedIndex = value;
+		}
+	}
 
 	// Use this for initialization
 	void Start () 
@@ -28,7 +41,7 @@ public class AttackSystem : NetworkBehaviour {
 		if (!isLocalPlayer)
 			return;
 
-		foreach (KeyValuePair<string, Attack> entry in attacks) //et pas un foreach parce qu'on a besoin de l'index
+		foreach (KeyValuePair<string, Attack> entry in attacks)
 		{//puisqu'on ne peut transmettre que des types basique a travers les Cmd et Rpc
 			if (Input.GetKeyDown(entry.Value.key) && Time.time > entry.Value.NextFireTime)
 			{
@@ -57,7 +70,6 @@ public class AttackSystem : NetworkBehaviour {
 	{
 		StartCoroutine(attacks[attackName].fire(gameObject));
 	}
-
 
 	[Server]
 	public void resync()
