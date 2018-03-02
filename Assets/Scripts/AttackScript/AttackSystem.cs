@@ -62,7 +62,8 @@ public class AttackSystem : NetworkBehaviour {
 	[Command]
 	public void CmdAttack(string attackName)
 	{
-		RpcActualAttack(attackName);
+		if(Time.time > attacks[attackName].NextFireTime) //empeche les clients de hacker les cooldown et spammer les attack
+			RpcActualAttack(attackName);
 	}
 
 	[ClientRpc]
