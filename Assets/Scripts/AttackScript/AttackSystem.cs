@@ -191,7 +191,7 @@ public class AttackSystem : NetworkBehaviour {
 	/**
 	 * Jeune PadouéWan, StatSystem tu ira voir
 	 * pour voir l'exemple RpcNewStat qui fait la meme chose pour les stats
-	 * Sans tous le coté compliqué
+	 * Sans tout le coté compliqué
 	 * */
 	[ClientRpc]
 	public void RpcNewAttack(string attackName, AttackType type, float cooldown, float damage, KeyCode key, string animFloat, byte[] attackData, float chargeCooldown)

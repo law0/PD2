@@ -3,6 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+/**
+ * Et bien et bien...
+ * bienvenue au coeur du champs de bataille! : les attaques
+ * Attaquons nous au sujet... ho ho ho...
+ *
+ **/
+
+/**
+ * AttackData! Chaque attaque ayant des besoins spécifiques (elles sont si capricieuses)
+ * Il aurait ete compliqué de faire une classe par Attaque avec chacune des attributs différents...
+ * Donc allez tout le monde partage la meme structure!
+ * AttackData est donc une structure pouvant contenir des données pour les différentes attaques
+ * Chaque attaque ne regardera que ce qui l'intéresse. Il n'est donc pas nécéssaire de renseigner tpDistance pour
+ * une attaque de type MELEE...
+ * NOTE: par convention le nom de chaque champs doit commencer par le nom du type d'attaque auquel il sert
+ * Si il en sert 2 ou plus ce n'est pas obligatoire (genre bulletIndex sert à CAST et CIBLEE) mais il vaut 
+ * mieux que le nom reste explicite!
+ * */
 [System.Serializable]
 public struct AttackData //données spécifique à chaque attaque
 {
@@ -24,6 +42,38 @@ public enum AttackType
 	TP,
 	CIBLEE,
 };
+
+/**
+ * Class représentant une attaque
+ * une attaque peut etre de 6 sortes
+ * CAST, DASH, ACCEL, MELEE, TP, et CIBLEE
+ * CAST et CIBLEE sont les attaques de lancer
+ * CAST lance juste une bullet, CIBLEE lance une bullet qui cherchera une cible
+ * NOTE: les "bullets" sont des prefabs à part. Ce sont donc ces bullets qui s'occuperont
+ * d'infliger des degats ou de chercher la cible, ici on se contente de les instancier et les init
+ * DASH permet de déplacer le Player d'un point A à un point B rapidos, sans que le Player
+ * puisse modifier sa trajectoire en cours de route
+ * NOTE: Degat de dash a faire
+ * ACCEL: Accelere (ou ralentit tiens) les déplacements du Player pendant une courte durée
+ * MELEE: typiquement une attaque au corps à corps. C'est juste une animation et des dégats dans une zone pres du corps
+ * TP: devine!
+ * 
+ * NOTE: Attack est un monobehaviour qui peut etre mis des le départ dans le prefab Player ou instancier dynamiquement
+ * via AttackSystem
+ *
+ * Chaque Attack a plusieurs attributs essentiels:
+ * string attackName <- son nom. Doit etre unique pour chaque joueur, car les attaques sont rangées dans un dico
+ * AttackType type <- (voir enum plus haut) type de l'attaque, DASH, CAST etc.
+ * float cooldown <- devine
+ * float chargeCooldown <- délai d'attente ayant lieu après l'evenement déclencheur de l'attaque, avant ladite attaque
+ * 			   permet par exemple de faire des grosses attaques qui nécéssitent un temps de chargement
+ * float damage <- devine encore! NOTE: pour CAST et CIBLEE, les scripts de bullet correspondant se verront attribué
+ * 		   cette valeur damage! Il FAUT donc qu'ils aient un attribute public damage
+ * Keycode key <- Space, A, Mouse0... entrée clavier ou souris qui déclenche l'attaque
+ * string AnimFloatName <- nom de l'animation à joueur. IMPORTANT: les animations doivent avoir des transitions de type 
+ * 			float! Si tu comprends pas, demande à tonton law0
+ * AttackData attackData <- voir AttackData structure plus haut
+ * */
 
 public class Attack : MonoBehaviour
 {
@@ -66,6 +116,19 @@ public class Attack : MonoBehaviour
 	public AttackData attackData;
 
 	//fonction de lancement de l'attaque
+	/*
+	 *
+	 * L'heure est grave... le joueur a demandé une attaque...
+	 * C'est terrible!!! Ou pas =D A BAS L'ENNEMI!
+	 * Mais comment lancer l'attaque ?
+	 * Primo, tu remarqueras que cette fonction retourne un IEnumerator
+	 * non pas que c'est fun, mais parce que cette fonction est lancée en coroutine.
+	 * Deucio, hum deuxio! concretement ca fait juste un switch sur le type de l'attaque, 
+	 * stocké dans la variable...
+	 * -> type <-
+	 * Incroyable :)
+	 * Et selon le type d'attaque, le comportement change obviously
+	 * */
 	public IEnumerator fire(GameObject emitter)
 	{
 		_nextFireTime = Time.time + cooldown;
@@ -74,18 +137,43 @@ public class Attack : MonoBehaviour
 		AttackSystem attackSystem = GetComponent<AttackSystem>();
 		switch (type)
 		{
-			case AttackType.CAST:
+			case AttackType.CAST: //si on est en cast!
+				// Alors 1 on récupere la bullet
+				// La bonne bullet est choisie grace au bulletIndex que tu n'auras pas
+				// oublié de renseigner dans attackData
+				// L'index bulletIndex doit correspondre à l'index de la bullet que tu veux
+				// dans le tableau bullets de l'attackSystem
+				// (Tu n'auras donc pas non plus oublier de renseigner les bullets dans ledit tableau...)
 				GameObject bullet = attackSystem.bullets[attackData.bulletIndex];
 				var bullet_clone = Object.Instantiate(bullet, emitter.transform.position + Vector3.up + emitter.transform.forward * 2, emitter.transform.rotation) as GameObject;
 				//un peu plus haut qu'au sol, et un peu plus en avant par rapport au perso  
 				var bullet_script = bullet_clone.GetComponent<dummy_bullet>();
 				if (bullet_script != null)
 				{
-					bullet_script.damage = damage;
-					bullet_script.setOriginGameObject(emitter);
+					bullet_script.damage = damage; //On lui dit quelle dégats faire
+					bullet_script.setOriginGameObject(emitter); //et la qui a tiré, toi en l'occurence
 				}
+				// PS! si tu regardes les tutoriaux (ou tutoriels ? ou tutorials? enfin bref les tutos)
+				// de Unity sur le networking, tu verras qu'ils utilisent NetworkServer.Spawn
+				// pour faire spawn un objet sur le réseau
+				// L'ennui c'est que :
+				// d'1 ici on est dans un monobehavior et ca ne changera pas parce qu'il faut que ce 
+				// component soit ajoutable at runtime
+				// de 2 cette fonction est executée sur le server et les clients, du coup
+				// Object.Instantiate suivit de NetworkSpawn créera 2 bullets sur la machine qui
+				// est a la fois cliente et server
 				break;
 
+
+				//Je sais pas en quoi c'est une attaque... d'ailleurs dash tp etc
+				//peuvent ne pas etre des attaques non plus
+				//Mais fallait bien mettre ces skills quelque part...
+				//Oh... j'aurai ptetre du nommé SkillSystem...
+				//rofff flemme de tout changer
+				//Ah oui ci dessous bah, on change la speed du joueur dans le script move
+				//on attend ensuite... AARGH une valeur en dur!!!
+				//NOTE: changer la valeur 1.0F ci dessous par attackData.accelDuration
+				//NOTE: et créer attackData.accelDuration et le renseigner!
 			case AttackType.ACCEL:
 				if (null != moveScript)
 				{
@@ -96,6 +184,12 @@ public class Attack : MonoBehaviour
 				}
 				break;
 
+				//Globalement le point de départ c'est la ou t'es
+				//Il y pas de point d'arrivée mais plutot une distance a parcourir
+				//(attackData.dashDistance) dans une direction (devant le joueur)
+				//Pourquoi devant et pas vers la ou tu cliques? benh le joueur se tourne
+				//des que tu cliques quelque part anyway... donc devant c'est bon ;)
+				//
 			case AttackType.DASH:
 				if (null != moveScript)
 				{
