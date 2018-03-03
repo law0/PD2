@@ -25,8 +25,8 @@ public class AttackSystem : NetworkBehaviour {
 	private Dictionary<string, Attack> attacks = new Dictionary<string, Attack>();
 
 	/** Huh? WADISTHAT? VASISTAS?
-	 * Dur d'expliquer la... va voir plus loin c'est expliqué
-	 * Si si allez vas y, je te Proooomet
+	 * Dur d'expliquer la... va voir dans Attack.cs c'est expliqué
+	 * Si si allez vas y, je te proooomet
 	 * */
 	private int playerClickedIndex = -1;
 	public int PlayerClickedIndex

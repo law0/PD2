@@ -46,10 +46,4 @@ public class BulletCiblee : NetworkBehaviour {
 		}
 		Destroy(gameObject);
 	}
-
-	public void spawn()
-	{
-		if (isServer)
-			NetworkServer.Spawn(gameObject);
-	}
 }

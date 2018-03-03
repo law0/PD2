@@ -55,6 +55,7 @@ public class dummy_bullet : NetworkBehaviour {
 			Destroy(gameObject);
 	}
 
+	//oui trigger au lieu de Collision, manquerait plus que la bullet pousse le joueur
 	void OnTriggerEnter(Collider other)
 	{
 		var statSystem = other.GetComponent<StatSystem>();

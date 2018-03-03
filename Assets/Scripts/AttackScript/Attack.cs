@@ -216,6 +216,8 @@ public class Attack : MonoBehaviour
 				}
 				break;
 
+			// devine ce que ca fait...
+			// bref si tu es dans le radius tu te prends des degats... ouf hein :)
 			case AttackType.MELEE:
 				List<GameObject> melee_playersInRadius = PlayerUtils.getPlayerIn3DRadius(emitter.transform.position, attackData.meleeDamageRadius);
 				foreach (GameObject player in melee_playersInRadius)
@@ -224,6 +226,7 @@ public class Attack : MonoBehaviour
 				}
 				break;
 
+			// devine!!!	
 			case AttackType.TP:
 				if (null != moveScript)
 				{
@@ -232,12 +235,22 @@ public class Attack : MonoBehaviour
 				}
 				break;
 
+			// Alors la... c'est compliqué.
+			// De base ca fait la meme chose qu'en cast
+			// du coup si t'as pas vu CAST, va le voir
+			// Sinon... lis petit à petit
 			case AttackType.CIBLEE:
-				Debug.Log("here at least!");
+				//Alors AttackSystem.PlayerClickedIndex
+				// Je t'avais promis que je t'expliquerai...
+				// PlayerClickedIndex est l'index du dernier joueur sur lequel tu as cliqué
+				// Chaque joueur est répertorié dans le tableau dans PlayerUtils.PlayerList
+				// Il s'agit donc de l'index dans ce tableau
+				// Pour voir comment cet index est placé, va voir PlayerUtils... allez va...
 				int index = GetComponent<AttackSystem>().PlayerClickedIndex;
 				if (-1 != index)
 				{
 					GameObject target = PlayerUtils.PlayerList[index];
+					//Les attaques ciblees ne doivent marcher que dans un certain rayon aussi
 					if (Vector3.Distance(emitter.transform.position, target.transform.position) < attackData.cibleeRadius)
 					{
 						Debug.Log("here");
@@ -249,7 +262,8 @@ public class Attack : MonoBehaviour
 						{
 							bullet_ciblee_script.damage = damage;
 							bullet_ciblee_script.setOriginGameObject(emitter);
-							bullet_ciblee_script.setTarget(target);
+							bullet_ciblee_script.setTarget(target); // en plus des damages et du player
+							//qui a emis la bullet; on passe aussi la cible, c'est logique banane...
 						}
 					}
 				}
