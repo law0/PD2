@@ -3,9 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+/** 1) Doit etre présent parmi les components du prefab Player
+ * Permet d'initialiser le player:
+ * Rempli les Stats -> voir Stat.cs et StatSystem.cs
+ * Rempli les Attaques -> voir Attack.cs et AttackSystem.cs
+ * Enregistre le Player dans la liste des Player -> voir PlayerUtils.cs
+ * */
+
+
+
 public class Init : NetworkBehaviour
 {
 	//ne pas oublier de mettre les bullets dans le tableau Spawnable du NetworkManager!!! et dans le tableau bullets de AttackSystem
+	//Rempli les stats et les attaques
+	//Note: les stats et attaques peuvent aussi être directement renseignées dans le préfab
 	public override void OnStartLocalPlayer()
 	{
 		tag = "LocalPlayer";
@@ -63,7 +74,14 @@ public class Init : NetworkBehaviour
 		PlayerUtils.PlayerList.Add(gameObject);
 	}
 
-	[Command]
+	/** Cette fonction est temporaire
+	 * Appelée à chaque new Player qui se connecte
+	 * Elle appelle les fonctions resync de chaque StatSystem et AttackSystem de chaque player LOCALEMENT
+	 * ces fonctions resync vont ensuite bah resync les Stat et Attack des player distant avec
+	 * leur avatar local
+	 * Dans le futur -> cette fonction ne devra être appelée qu'une fois au début du match
+	 * */
+	[Command] 
 	public void CmdReinit()
 	{
 		foreach (GameObject player in PlayerUtils.PlayerList)
@@ -72,12 +90,19 @@ public class Init : NetworkBehaviour
 			AttackSystem pAttackSystem = player.GetComponent<AttackSystem>();
 
 			pStatSystem.resync();
+			pStatSystem.die(); //die est aussi appelé pour etre sur de sync les vies a 100 et de respawn
+			//ok en fait ca regle aussi un "bug" inevitable mais je ne sais plus lequel. Mais on s'en fout de mourir avant 
+			//le debut du match
 			pAttackSystem.resync();
 
 			RpcCallbacksOnHealth(); //du coup vu qu'on a resync, chaque client doit remettre ces callback
 		}
 	}
 
+	/**
+	 * Vu que les Stats sont resync au debut du match il faut aussi reconnecté les callbacks/watchers des stats
+	 * Note: A faire: vérifier que si un watcher est déjà connecté, il ne faut pas le reconnecté
+	 * */
 	[ClientRpc]
 	public void RpcCallbacksOnHealth()
 	{

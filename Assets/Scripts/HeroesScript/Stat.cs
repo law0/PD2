@@ -4,11 +4,21 @@ using UnityEngine;
 
 public delegate void StatCallback(float v);
 
-
-//class Stat. Le respect des limites entre min et max est automatique : add(25) sur une stat qui est a 100 et ayant pour max 120 ne montera la stat que jusqu'a 120
-//+ system de callback. Pour ajouter une fonction callback a appeler a chaque fois que la valeur change, il suffit de faire stat.callbackList.Add(function_name)
-//la signature de la fonction de callback doit etre "public void function_name(float v)"
-//voir exemple dans Respawn.cs
+/**
+ * D'abord va voir StatSystem.cs
+ * et apres reviens ici
+ * ...
+ * T'es revenu? T'as lu? bon!
+ * Et bien cette class ne fait pas grand chose, c'est juste un wrapper d'une valeur <- la stat en elle meme
+ * Bon elle est pratique puisqu'elle associe aussi le min, le max, le nom de la stat (statname) et les callback
+ * a appelé à chaque changement de cette valeur.
+ * Ha et surtout! :
+ * C'est un MonoBehaviour. Contrairement à StatSystem qui est un NetworkBehaviour.
+ * Ce qui permet une chose: l'ajout dynamique de Stat.
+ * Car les NetworkBehaviour ne Peuvent Pas Etre Ajouter AT RUNTIME. Oui fais chier.
+ * Il fallut donc séparer toute la partie network des comportements dynamique at runtime
+ * Voila pourquoi tout est aussi compliqué
+ * */
 public class Stat : MonoBehaviour 
 {
 	public float val;
