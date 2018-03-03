@@ -29,6 +29,17 @@ public class AttackSystem : NetworkBehaviour {
 		}
 	}
 
+	void Awake()
+	{
+		//on ajoute les attaques placées de base dans le player
+		Attack[] attackarray = GetComponents<Attack>();
+
+		foreach(Attack attack in attackarray)
+		{
+			attacks.Add(attack.attackName, attack);
+		}		
+	}
+
 	// Use this for initialization
 	void Start () 
 	{

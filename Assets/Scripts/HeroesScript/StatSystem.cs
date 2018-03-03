@@ -13,6 +13,7 @@ public class StatSystem : NetworkBehaviour
 
 	void Awake()
 	{
+		//on ajoute les stats présentes de bases dans le player
 		Stat[] statsint = GetComponents<Stat>();
 
 		foreach (Stat stat in statsint)

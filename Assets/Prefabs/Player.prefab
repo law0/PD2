@@ -570,7 +570,9 @@ GameObject:
   - component: {fileID: 54130409005512914}
   - component: {fileID: 136734117512898780}
   - component: {fileID: 114017335882280082}
+  - component: {fileID: 114630561369671736}
   - component: {fileID: 114922846715767172}
+  - component: {fileID: 114320963419719280}
   - component: {fileID: 114416334239832514}
   - component: {fileID: 114916692750506074}
   m_Layer: 0
@@ -967,7 +969,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1539606152353934}
-  m_LocalRotation: {x: -0.3136913, y: -0.3482318, z: -0.45353743, w: 0.7580477}
+  m_LocalRotation: {x: -0.31369126, y: -0.34823176, z: -0.45353737, w: 0.7580476}
   m_LocalPosition: {x: 0.000000029802322, y: 1.0092299, z: -0.000000059604645}
   m_LocalScale: {x: 1.0000004, y: 1.0000002, z: 1.0000002}
   m_Children:
@@ -1323,6 +1325,35 @@ MonoBehaviour:
     i15: 15
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
+--- !u!114 &114320963419719280
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1870698345723830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caf2087d22631784dbc622b3bdd77a5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackName: Simple cast ciblee
+  type: 5
+  cooldown: 1
+  chargeCooldown: 0
+  damage: 5
+  key: 323
+  animFloatName: cast_attack
+  animFloat: 0
+  attackData:
+    interruptible: 0
+    bulletIndex: 1
+    accelSpeed: 0
+    dashSpeed: 0
+    dashDistance: 0
+    dashDamageRadius: 0
+    meleeDamageRadius: 0
+    tpDistance: 0
+    cibleeRadius: 20
 --- !u!114 &114373576351916514
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1353,6 +1384,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcaa491362990ba498ab64d97509cb6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114630561369671736
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1870698345723830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e316a01a55cb5249b941e67a158fa24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  val: 100
+  statName: health
+  min: 0
+  max: 100
 --- !u!114 &114737924110440656
 MonoBehaviour:
   m_ObjectHideFlags: 1

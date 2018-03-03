@@ -139,12 +139,14 @@ public class Attack : MonoBehaviour
 				break;
 
 			case AttackType.CIBLEE:
+				Debug.Log("here at least!");
 				int index = GetComponent<AttackSystem>().PlayerClickedIndex;
 				if (-1 != index)
 				{
 					GameObject target = PlayerUtils.PlayerList[index];
 					if (Vector3.Distance(emitter.transform.position, target.transform.position) < attackData.cibleeRadius)
 					{
+						Debug.Log("here");
 						GameObject bullet_ciblee = attackSystem.bullets[attackData.bulletIndex];
 						var bullet_ciblee_clone = Object.Instantiate(bullet_ciblee, emitter.transform.position + Vector3.up + emitter.transform.forward * 2, emitter.transform.rotation) as GameObject;
 						//un peu plus haut qu'au sol, et un peu plus en avant par rapport au perso  
@@ -156,6 +158,10 @@ public class Attack : MonoBehaviour
 							bullet_ciblee_script.setTarget(target);
 						}
 					}
+				}
+				else
+				{
+					Debug.Log("over here");
 				}
 				break;
 

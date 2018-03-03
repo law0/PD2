@@ -13,7 +13,9 @@ public class Init : NetworkBehaviour
 		StatSystem statSystem = GetComponent<StatSystem>();
 		if (null != statSystem)
 		{
-			statSystem.newStat("health", 0, 100, 100); //met la valeur a 100 au début
+			//vu que tous les player auront de la santé, on ajoute la stat health directement dans le prefab
+			//statSystem.newStat("health", 0, 100, 100); //met la valeur a 100 au début
+			statSystem.newStat("armor", 0, 50, 10);
 			statSystem.die(); // pour synchro toutes les vies a 100
 		}
 
@@ -48,7 +50,8 @@ public class Init : NetworkBehaviour
 			attackSystem.newAttack("Simple Dash", AttackType.DASH, 1.0F, 5.0F, KeyCode.E, "dash_attack", dashData);
 			attackSystem.newAttack("Simple Cac", AttackType.MELEE, 1.0F, 5.0F, KeyCode.R, "melee_attack", meleeData);
 			attackSystem.newAttack("Simple Tp", AttackType.TP, 5.0F, 0.0F, KeyCode.T, "tp_attack", tpData);
-			attackSystem.newAttack("Simple cast ciblee", AttackType.CIBLEE, 1.0F, 5.0F, KeyCode.Mouse0, "cast_attack", cibleeData);
+			//tous les players auront aussi une attaque cible (auto attack) de base -> ajoute direct dans le prefab
+			//attackSystem.newAttack("Simple cast ciblee", AttackType.CIBLEE, 1.0F, 5.0F, KeyCode.Mouse0, "cast_attack", cibleeData);
 		}
 
 		CmdReinit(); //to resync with Stats and Attacks of other players
