@@ -145,7 +145,7 @@ public class Attack : MonoBehaviour
 				// dans le tableau bullets de l'attackSystem
 				// (Tu n'auras donc pas non plus oublier de renseigner les bullets dans ledit tableau...)
 				GameObject bullet = attackSystem.bullets[attackData.bulletIndex];
-				var bullet_clone = Object.Instantiate(bullet, emitter.transform.position + Vector3.up + emitter.transform.forward * 2, emitter.transform.rotation) as GameObject;
+				var bullet_clone = Object.Instantiate(bullet, emitter.transform.position + Vector3.up + emitter.transform.forward, emitter.transform.rotation) as GameObject;
 				//un peu plus haut qu'au sol, et un peu plus en avant par rapport au perso  
 				var bullet_script = bullet_clone.GetComponent<dummy_bullet>();
 				if (bullet_script != null)
@@ -251,7 +251,7 @@ public class Attack : MonoBehaviour
 				{
 					GameObject target = PlayerUtils.PlayerList[index];
 					//Les attaques ciblees ne doivent marcher que dans un certain rayon aussi
-					if (Vector3.Distance(emitter.transform.position, target.transform.position) < attackData.cibleeRadius)
+					if (Vector3.Distance(emitter.transform.position, target.transform.position) < attackData.cibleeRadius && target != gameObject)
 					{
 						Debug.Log("here");
 						GameObject bullet_ciblee = attackSystem.bullets[attackData.bulletIndex];
