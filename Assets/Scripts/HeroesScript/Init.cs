@@ -27,7 +27,6 @@ public class Init : NetworkBehaviour
 			//vu que tous les player auront de la santé, on ajoute la stat health directement dans le prefab
 			//statSystem.newStat("health", 0, 100, 100); //met la valeur a 100 au début
 			statSystem.newStat("armor", 0, 50, 10);
-			statSystem.die(); // pour synchro toutes les vies a 100
 		}
 
 		AttackSystem attackSystem = GetComponent<AttackSystem>();
@@ -57,10 +56,10 @@ public class Init : NetworkBehaviour
 			cibleeData.bulletIndex = 1; //cherchera dans attackSystem.bullets[1];
 
 			attackSystem.newAttack("Simple cast", AttackType.CAST, 0.5F, 10.0F, KeyCode.A, "cast_attack", castData);
-			attackSystem.newAttack("Simple Acceleration", AttackType.ACCEL, 1.0F, 0.0F, KeyCode.Z, "accel_attack", accelData);
-			attackSystem.newAttack("Simple Dash", AttackType.DASH, 1.0F, 5.0F, KeyCode.E, "dash_attack", dashData);
-			attackSystem.newAttack("Simple Cac", AttackType.MELEE, 1.0F, 5.0F, KeyCode.R, "melee_attack", meleeData);
-			attackSystem.newAttack("Simple Tp", AttackType.TP, 5.0F, 0.0F, KeyCode.T, "tp_attack", tpData);
+			//attackSystem.newAttack("Simple Acceleration", AttackType.ACCEL, 1.0F, 0.0F, KeyCode.Z, "accel_attack", accelData);
+			//attackSystem.newAttack("Simple Dash", AttackType.DASH, 1.0F, 5.0F, KeyCode.E, "dash_attack", dashData);
+			//attackSystem.newAttack("Simple Cac", AttackType.MELEE, 1.0F, 5.0F, KeyCode.R, "melee_attack", meleeData);
+			//attackSystem.newAttack("Simple Tp", AttackType.TP, 5.0F, 0.0F, KeyCode.T, "tp_attack", tpData);
 			//tous les players auront aussi une attaque cible (auto attack) de base -> ajoute direct dans le prefab
 			//attackSystem.newAttack("Simple cast ciblee", AttackType.CIBLEE, 1.0F, 5.0F, KeyCode.Mouse0, "cast_attack", cibleeData);
 		}
@@ -81,21 +80,31 @@ public class Init : NetworkBehaviour
 	 * leur avatar local
 	 * Dans le futur -> cette fonction ne devra être appelée qu'une fois au début du match
 	 * */
-	[Command] 
+	[Command]
 	public void CmdReinit()
 	{
-		foreach (GameObject player in PlayerUtils.PlayerList)
+		reinit();
+		RpcCallbacksOnHealth(); //du coup vu qu'on a resync, chaque client doit remettre ses callback
+	}
+
+	[Server]
+	public static void reinit()
+	{
+		if (! NetworkServer.active)
+			return;
+		
+		if (MatchManager.instance && !MatchManager.instance.MatchStarted)
 		{
-			StatSystem pStatSystem = player.GetComponent<StatSystem>();
-			AttackSystem pAttackSystem = player.GetComponent<AttackSystem>();
+			foreach (GameObject player in PlayerUtils.PlayerList)
+			{
+				StatSystem pStatSystem = player.GetComponent<StatSystem>();
+				AttackSystem pAttackSystem = player.GetComponent<AttackSystem>();
 
-			pStatSystem.resync();
-			pStatSystem.die(); //die est aussi appelé pour etre sur de sync les vies a 100 et de respawn
-			//ok en fait ca regle aussi un "bug" inevitable mais je ne sais plus lequel. Mais on s'en fout de mourir avant 
-			//le debut du match
-			pAttackSystem.resync();
+				pStatSystem.resync();
+				pAttackSystem.resync();
 
-			RpcCallbacksOnHealth(); //du coup vu qu'on a resync, chaque client doit remettre ces callback
+				pStatSystem.die();
+			}
 		}
 	}
 
