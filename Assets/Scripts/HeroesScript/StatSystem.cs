@@ -32,9 +32,21 @@ public class StatSystem : NetworkBehaviour
 		}
 	}
 
+	[Server]
 	public void die()
 	{
-		substract("health", 3000.0F);
+		if (!isServer)
+			return;
+		RpcDie();
+		Debug.Log("RpcDie called");
+	}
+
+	[ClientRpc]
+	public void RpcDie()
+	{
+		Debug.Log("RpcDie executed");
+		Respawn respawn = GetComponent<Respawn>();
+		respawn.respawn();
 	}
 
 	/** 
