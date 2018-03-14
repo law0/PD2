@@ -336,7 +336,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4810982986293696}
   m_Layer: 0
-  m_Name: knight
+  m_Name: body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -969,7 +969,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1539606152353934}
-  m_LocalRotation: {x: -0.31369126, y: -0.34823176, z: -0.45353737, w: 0.7580476}
+  m_LocalRotation: {x: -0.3136913, y: -0.3482318, z: -0.4535374, w: 0.75804764}
   m_LocalPosition: {x: 0.000000029802322, y: 1.0092299, z: -0.000000059604645}
   m_LocalScale: {x: 1.0000004, y: 1.0000002, z: 1.0000002}
   m_Children:
@@ -1384,6 +1384,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcaa491362990ba498ab64d97509cb6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pointerToBodyMesh: {fileID: 1431673081583318}
 --- !u!114 &114630561369671736
 MonoBehaviour:
   m_ObjectHideFlags: 1

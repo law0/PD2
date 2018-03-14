@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using cakeslice;
 
 
 
@@ -15,8 +16,8 @@ public class MatchManager : NetworkBehaviour
 {
 	public bool hasTeams = true;
 
-	public List<int> teamA;
-	public List<int> teamB;
+	public List<int> teamA; //BLEU
+	public List<int> teamB; //ROUGE
 
 	private float startTime = -1.0F;
 
@@ -131,12 +132,34 @@ public class MatchManager : NetworkBehaviour
 	[ClientRpc]
 	private void RpcAddToTeamA(int index)
 	{
+		GameObject playerBody = PlayerUtils.getBodyMesh(index);
+		if (playerBody)
+		{
+			Outline outline = playerBody.AddComponent<Outline>();
+			if (outline)
+				outline.color = 2; //2 = blue color
+		}
+		else
+		{
+			Debug.Log("Body mesh not found (teamA)");
+		}
 		teamA.Add(index);
 	}
 
 	[ClientRpc]
 	private void RpcAddToTeamB(int index)
 	{
+		GameObject playerBody = PlayerUtils.getBodyMesh(index);
+		if (playerBody)
+		{
+			Outline outline = playerBody.AddComponent<Outline>();
+			if (outline)
+				outline.color = 0; //0 = red color
+		}
+		else
+		{
+			Debug.Log("Body mesh not found (teamB)");
+		}
 		teamB.Add(index);
 	}
 }
