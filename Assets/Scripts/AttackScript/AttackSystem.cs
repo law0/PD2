@@ -20,6 +20,8 @@ public class AttackSystem : NetworkBehaviour {
 	private Animator anim;
 	public GameObject[] bullets;
 
+	public GameObject attackList;
+
 	//code en dur a remplacer
 	//les attaques sont ici, a remplacer pour chargement "dynamique"
 	private Dictionary<string, Attack> attacks = new Dictionary<string, Attack>();
@@ -64,6 +66,7 @@ public class AttackSystem : NetworkBehaviour {
 	void Start () 
 	{
 		anim = transform.GetComponent<Animator>();
+		attackList = GameObject.Find("AttackList");
 	}
 	
 	// Update is called once per frame
@@ -139,40 +142,17 @@ public class AttackSystem : NetworkBehaviour {
 		foreach (KeyValuePair<string, Attack> entry in attacks)
 		{
 			Attack attack = entry.Value;
-			MemoryStream stream = new MemoryStream();
-			BinaryFormatter formatter = new BinaryFormatter();
-			try
-			{
-				formatter.Serialize(stream, attack.attackData);
-			}
-			catch (SerializationException e)
-			{
-				Debug.Log("Serialization Failed : " + e.Message);
-			}
-			byte[] objectAsBytes = stream.ToArray();
-			stream.Close();
-			RpcNewAttack(attack.attackName, attack.type, attack.cooldown, attack.damage, attack.key, attack.animFloatName, objectAsBytes, attack.chargeCooldown);
+
+			RpcNewAttack(attack.attackName, attack.cooldown, attack.damage, attack.key, attack.animFloatName, attack.chargeCooldown);
 		}
 	}
 
 	/**
 	 * La encore meme principe que newStat dans StatSystem
 	 * */
-	public void newAttack(string attackName, AttackType type, float cooldown, float damage, KeyCode key, string animFloat, AttackData attackData, float chargeCooldown = 0.0F)
+	public void newAttack(string attackName, float cooldown, float damage, KeyCode key, string animFloat, float chargeCooldown = 0.0F)
 	{
-		MemoryStream stream = new MemoryStream();
-		BinaryFormatter formatter = new BinaryFormatter();
-		try
-		{
-			formatter.Serialize(stream, attackData);
-		}
-		catch (SerializationException e)
-		{
-			Debug.Log("Serialization Failed : " + e.Message);
-		}
-		byte[] objectAsBytes = stream.ToArray();
-		stream.Close();
-		CmdNewAttack(attackName, type, cooldown, damage, key, animFloat, objectAsBytes, chargeCooldown);
+		CmdNewAttack(attackName, cooldown, damage, key, animFloat, chargeCooldown);
 	}
 
 	/**
@@ -183,9 +163,9 @@ public class AttackSystem : NetworkBehaviour {
 	 * donc va voir StatSystem jeune Padawan... allez va voir
 	 * */
 	[Command]
-	public void CmdNewAttack(string attackName, AttackType type, float cooldown, float damage, KeyCode key, string animFloat, byte[] attackData, float chargeCooldown)
+	public void CmdNewAttack(string attackName, float cooldown, float damage, KeyCode key, string animFloat, float chargeCooldown)
 	{
-		RpcNewAttack(attackName, type, cooldown, damage, key, animFloat, attackData, chargeCooldown);
+		RpcNewAttack(attackName, cooldown, damage, key, animFloat, chargeCooldown);
 	}
 
 	/**
@@ -194,35 +174,34 @@ public class AttackSystem : NetworkBehaviour {
 	 * Sans tout le coté compliqué
 	 * */
 	[ClientRpc]
-	public void RpcNewAttack(string attackName, AttackType type, float cooldown, float damage, KeyCode key, string animFloat, byte[] attackData, float chargeCooldown)
+	public void RpcNewAttack(string attackName, float cooldown, float damage, KeyCode key, string animFloat, float chargeCooldown)
 	{
 		if (!attacks.ContainsKey(attackName))
 		{
-			AttackData attackDataDeserialized = new AttackData();
-			MemoryStream stream = new MemoryStream();
-			stream.Write(attackData, 0, attackData.Length);
-			stream.Seek(0, SeekOrigin.Begin);
-			BinaryFormatter formatter = new BinaryFormatter();
-			try
+			if (attackList)
 			{
-				attackDataDeserialized = (AttackData)formatter.Deserialize(stream);
-			}
-			catch (SerializationException e)
-			{
-				Debug.Log("Deserialization Failed : " + e.Message);
-			}
-			stream.Close();
+				Attack[] availableAttacks = attackList.GetComponents<Attack>();
+				Attack addMe = null;
+				foreach (Attack attack in availableAttacks)
+				{
+					if (attack.attackName == attackName)
+					{
+						addMe = attack;
+						break;
+					}
+				}
 
-			Attack new_attack = gameObject.AddComponent<Attack>();
-			new_attack.attackName = attackName;
-			new_attack.type = type;
-			new_attack.cooldown = cooldown;
-			new_attack.key = key;
-			new_attack.animFloatName = animFloat;
-			new_attack.attackData = attackDataDeserialized;
-			new_attack.chargeCooldown = chargeCooldown;
-			new_attack.damage = damage;
-			attacks.Add(attackName, new_attack);
+				if (addMe)
+				{
+					Attack new_attack = gameObject.AddComponent(addMe.GetType()) as Attack;
+					new_attack.cooldown = cooldown;
+					new_attack.key = key;
+					new_attack.animFloatName = animFloat;
+					new_attack.chargeCooldown = chargeCooldown;
+					new_attack.damage = damage;
+					attacks.Add(attackName, new_attack);
+				}
+			}
 		}
 	}
 }

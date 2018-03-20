@@ -572,7 +572,6 @@ GameObject:
   - component: {fileID: 114017335882280082}
   - component: {fileID: 114630561369671736}
   - component: {fileID: 114922846715767172}
-  - component: {fileID: 114320963419719280}
   - component: {fileID: 114416334239832514}
   - component: {fileID: 114916692750506074}
   m_Layer: 0
@@ -1325,35 +1324,6 @@ MonoBehaviour:
     i15: 15
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
---- !u!114 &114320963419719280
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1870698345723830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: caf2087d22631784dbc622b3bdd77a5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackName: Simple cast ciblee
-  type: 5
-  cooldown: 1
-  chargeCooldown: 0
-  damage: 5
-  key: 323
-  animFloatName: cast_attack
-  animFloat: 0
-  attackData:
-    interruptible: 0
-    bulletIndex: 1
-    accelSpeed: 0
-    dashSpeed: 0
-    dashDistance: 0
-    dashDamageRadius: 0
-    meleeDamageRadius: 0
-    tpDistance: 0
-    cibleeRadius: 20
 --- !u!114 &114373576351916514
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1455,6 +1425,7 @@ MonoBehaviour:
   bullets:
   - {fileID: 1154856016790168, guid: f17b8f49081af12429fc3744b021a4dd, type: 2}
   - {fileID: 1352786158832886, guid: 912bac7477618a146ab81e9fd7b64390, type: 2}
+  attackList: {fileID: 0}
 --- !u!136 &136734117512898780
 CapsuleCollider:
   m_ObjectHideFlags: 1

@@ -384,7 +384,7 @@ MonoBehaviour:
   outlineCamera: {fileID: 202607508}
   outlineShaderMaterial: {fileID: 0}
   renderTexture: {fileID: 124664219}
-  extraRenderTexture: {fileID: 1109591769}
+  extraRenderTexture: {fileID: 0}
 --- !u!20 &138730709 stripped
 Camera:
   m_PrefabParentObject: {fileID: 20444598052033578, guid: 8bf63e20483b3b944bf4c3fb88a7cd3c,
@@ -8035,30 +8035,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1099960506}
   m_Mesh: {fileID: 4300000, guid: 44f5e43268182f840a45d817a7d82145, type: 3}
---- !u!84 &1109591769
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_Width: 1197
-  m_Height: 485
-  m_AntiAliasing: 1
-  m_DepthFormat: 1
-  m_ColorFormat: 0
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_TextureSettings:
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapMode: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
 --- !u!1001 &1117094628
 Prefab:
   m_ObjectHideFlags: 0
@@ -8580,6 +8556,150 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 113441872}
   m_Script: {fileID: -822479833, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+--- !u!1 &1456252536
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1456252543}
+  - component: {fileID: 1456252542}
+  - component: {fileID: 1456252541}
+  - component: {fileID: 1456252540}
+  - component: {fileID: 1456252539}
+  - component: {fileID: 1456252538}
+  - component: {fileID: 1456252537}
+  m_Layer: 0
+  m_Name: AttackList
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1456252537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1456252536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 366cfd7d2fcb9a94ea84d0948b4a05aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 0
+  chargeCooldown: 0
+  damage: 0
+  key: 0
+  animFloatName: 
+  animFloat: 0
+  tpDistance: 5
+--- !u!114 &1456252538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1456252536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5a919d4a144ca74c81c1eabfad42a08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 0
+  chargeCooldown: 0
+  damage: 0
+  key: 0
+  animFloatName: 
+  animFloat: 0
+  damageRadius: 0.5
+--- !u!114 &1456252539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1456252536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19bff9630511f5e4bb3889851900a833, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 0
+  chargeCooldown: 0
+  damage: 0
+  key: 0
+  animFloatName: 
+  animFloat: 0
+  speed: 18
+  distance: 5
+--- !u!114 &1456252540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1456252536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f752077e74ce224486de6d10a746161, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 0
+  chargeCooldown: 0
+  damage: 0
+  key: 0
+  animFloatName: 
+  animFloat: 0
+  radius: 20
+  bulletIndex: 1
+--- !u!114 &1456252541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1456252536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d32a8e31b46eb504eb256aa5504fe879, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 0
+  chargeCooldown: 0
+  damage: 0
+  key: 0
+  animFloatName: 
+  animFloat: 0
+  bulletIndex: 0
+--- !u!114 &1456252542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1456252536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba50899f6190e12439ae0ba37256f99a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 0
+  chargeCooldown: 0
+  damage: 0
+  key: 0
+  animFloatName: 
+  animFloat: 0
+  speed: 12
+--- !u!4 &1456252543
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1456252536}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.004801, y: -8.944597, z: 34.513412}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1475141803
 GameObject:
   m_ObjectHideFlags: 0
