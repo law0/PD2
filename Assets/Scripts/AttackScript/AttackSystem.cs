@@ -193,7 +193,17 @@ public class AttackSystem : NetworkBehaviour {
 
 				if (addMe)
 				{
-					Attack new_attack = gameObject.AddComponent(addMe.GetType()) as Attack;
+					System.Type type = addMe.GetType();
+					Attack new_attack = gameObject.AddComponent(type) as Attack;
+
+					//copie des valeurs des attributs du Component attack pris dans attackList
+					System.Reflection.FieldInfo[] fields = type.GetFields();
+					foreach (System.Reflection.FieldInfo field in fields)
+					{
+						field.SetValue(new_attack, field.GetValue(addMe));
+					}
+
+					//les attributs "communs" sont ensuite settés
 					new_attack.cooldown = cooldown;
 					new_attack.key = key;
 					new_attack.animFloatName = animFloat;
