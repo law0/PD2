@@ -1423,7 +1423,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bullets:
-  - {fileID: 1154856016790168, guid: f17b8f49081af12429fc3744b021a4dd, type: 2}
+  - {fileID: 1079861131240390, guid: 2092e1c873754b84195f228b1012a352, type: 2}
   - {fileID: 1352786158832886, guid: 912bac7477618a146ab81e9fd7b64390, type: 2}
   attackList: {fileID: 0}
 --- !u!136 &136734117512898780
