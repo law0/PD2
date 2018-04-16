@@ -33,35 +33,13 @@ public class Init : NetworkBehaviour
 
 		if (null != attackSystem)
 		{
-			//Exemple
-			var castData = new AttackData();
-			castData.bulletIndex = 0; //cherchera dans attackSystem.bullets[0];
-
-			var accelData = new AttackData();
-			accelData.accelSpeed = 12.0F;
-
-			var dashData = new AttackData();
-			dashData.dashSpeed = 18.0F;
-			dashData.dashDistance = 5.0F;
-			dashData.dashDamageRadius = 0.5F;
-
-			var meleeData = new AttackData();
-			meleeData.meleeDamageRadius = 0.5F;
-
-			var tpData = new AttackData();
-			tpData.tpDistance = 5.0F;
-
-			var cibleeData = new AttackData();
-			cibleeData.cibleeRadius = 20.0F;
-			cibleeData.bulletIndex = 1; //cherchera dans attackSystem.bullets[1];
-
-			attackSystem.newAttack("Simple cast", AttackType.CAST, 0.5F, 10.0F, KeyCode.A, "cast_attack", castData);
-			//attackSystem.newAttack("Simple Acceleration", AttackType.ACCEL, 1.0F, 0.0F, KeyCode.Z, "accel_attack", accelData);
-			//attackSystem.newAttack("Simple Dash", AttackType.DASH, 1.0F, 5.0F, KeyCode.E, "dash_attack", dashData);
-			//attackSystem.newAttack("Simple Cac", AttackType.MELEE, 1.0F, 5.0F, KeyCode.R, "melee_attack", meleeData);
-			//attackSystem.newAttack("Simple Tp", AttackType.TP, 5.0F, 0.0F, KeyCode.T, "tp_attack", tpData);
+			attackSystem.newAttack("Attack_SimpleCast", 0.5F, 10.0F, KeyCode.A, "cast_attack");
+			attackSystem.newAttack("Attack_SimpleAccel", 1.0F, 0.0F, KeyCode.Z, "accel_attack");
+			attackSystem.newAttack("Attack_SimpleDash", 1.0F, 5.0F, KeyCode.E, "dash_attack");
+			attackSystem.newAttack("Attack_SimpleMelee", 1.0F, 5.0F, KeyCode.R, "melee_attack");
+			attackSystem.newAttack("Attack_SimpleTp", 5.0F, 0.0F, KeyCode.T, "tp_attack");
 			//tous les players auront aussi une attaque cible (auto attack) de base -> ajoute direct dans le prefab
-			//attackSystem.newAttack("Simple cast ciblee", AttackType.CIBLEE, 1.0F, 5.0F, KeyCode.Mouse0, "cast_attack", cibleeData);
+			attackSystem.newAttack("Attack_SimpleCiblee", 1.0F, 5.0F, KeyCode.Mouse0, "cast_attack");
 		}
 
 		CmdReinit(); //to resync with Stats and Attacks of other players

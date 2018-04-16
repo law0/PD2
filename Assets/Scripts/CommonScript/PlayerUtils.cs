@@ -11,6 +11,16 @@ public class PlayerUtils : NetworkBehaviour {
 
 	public static GameObject lastSelectedPlayer = null;
 
+	public GameObject pointerToBodyMesh = null;
+
+	public static GameObject getBodyMesh(int index)
+	{
+		if (0 <= index && index < PlayerList.Count)
+			return PlayerList[index].GetComponent<PlayerUtils>().pointerToBodyMesh;
+		else
+			return null;
+	}
+
 		//get where mouse point
 	public static void GetMouse3DPosition(ref Vector3 target)
 	{
