@@ -1,0 +1,8 @@
+collision system:
+-in code/modeling system then import from .egg
+-collisionsolid , je propose un disque /sphere pour perso
+-collisiontube pour wall
+
+- name of collision event: =>https://www.panda3d.org/manual/index.php/Collision_Handlers
+
+blender 
