@@ -34,9 +34,9 @@ public class Init : NetworkBehaviour
 		if (null != attackSystem)
 		{
 			attackSystem.newAttack("Attack_SimpleCast", 0.5F, 10.0F, KeyCode.A, "cast_attack");
-			attackSystem.newAttack("Attack_SimpleAccel", 1.0F, 0.0F, KeyCode.Z, "accel_attack");
-			attackSystem.newAttack("Attack_SimpleDash", 1.0F, 5.0F, KeyCode.E, "dash_attack");
-			attackSystem.newAttack("Attack_SimpleMelee", 1.0F, 5.0F, KeyCode.R, "melee_attack");
+			//attackSystem.newAttack("Attack_SimpleAccel", 1.0F, 0.0F, KeyCode.Z, "accel_attack");
+			//attackSystem.newAttack("Attack_SimpleDash", 1.0F, 5.0F, KeyCode.E, "dash_attack");
+			//attackSystem.newAttack("Attack_SimpleMelee", 1.0F, 5.0F, KeyCode.R, "melee_attack");
 			attackSystem.newAttack("Attack_SimpleTp", 5.0F, 0.0F, KeyCode.T, "tp_attack");
 			//tous les players auront aussi une attaque cible (auto attack) de base -> ajoute direct dans le prefab
 			attackSystem.newAttack("Attack_SimpleCiblee", 1.0F, 5.0F, KeyCode.Mouse0, "cast_attack");
