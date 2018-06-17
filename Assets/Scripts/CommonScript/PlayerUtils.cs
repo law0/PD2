@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -42,7 +42,7 @@ public class PlayerUtils : NetworkBehaviour {
 		obj.transform.eulerAngles = lea;
 	}
 
-	public static List<GameObject> getPlayerIn3DRadius(Vector3 pos, float radius)
+	public static List<GameObject> GetPlayerIn3DRadius(Vector3 pos, float radius)
 	{
 		var returnList = new List<GameObject>();
 		foreach (GameObject player in PlayerList)
@@ -53,7 +53,13 @@ public class PlayerUtils : NetworkBehaviour {
 		return returnList;
 	}
 
-	public static int clickedOnPlayer(KeyCode code)
+	/**
+	 * Appellé dans chaque frame dans Update et aussi dans Move.cs
+	 * Retourne -1 si on n'a pas cliquer sur un player
+	 * Retourne l'index du player sinon
+	 * CAUTION: peut retourne notre propre index si on clique sur notre player
+	 **/
+	public static int ClickedOnPlayer(KeyCode code)
 	{
 		if (Input.GetKey(code))
 		{
@@ -71,7 +77,7 @@ public class PlayerUtils : NetworkBehaviour {
 		return -1;
 	}
 
-	public static void spawn(GameObject obj)
+	public static void Spawn(GameObject obj)
 	{
 		NetworkServer.Spawn(obj);
 	}
@@ -81,11 +87,10 @@ public class PlayerUtils : NetworkBehaviour {
 		if (isLocalPlayer)
 		{
 			AttackSystem attackSystem = GetComponent<AttackSystem>();
-			int index = clickedOnPlayer(KeyCode.Mouse0);
+			int index = ClickedOnPlayer(KeyCode.Mouse0);
 			if (index != attackSystem.PlayerClickedIndex)
 			{
 				CmdClickedOnPlayer(index);
-				//lastClickOnPlayerIndex = index;
 			}
 		}
 	}

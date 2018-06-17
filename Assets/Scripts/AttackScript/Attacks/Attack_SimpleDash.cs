@@ -19,8 +19,6 @@ public class Attack_SimpleDash : Attack
 
 	public float distance = 5.0f;
 
-	//public float damageRadius = 0.5f;
-
 	public override IEnumerator fire(GameObject emitter)
 	{
 		_nextFireTime = Time.time + cooldown;
@@ -43,13 +41,6 @@ public class Attack_SimpleDash : Attack
 			Vector3 origPos = emitter.transform.position;
 			while (dashNotFinish)
 			{
-				/*List<GameObject> dash_playersInRadius = PlayerUtils.getPlayerIn3DRadius(emitter.transform.position, damageRadius);
-				foreach (GameObject player in dash_playersInRadius)
-				{
-					if(player != gameObject) //manquerait plus qu'on se fasse des dommages soit meme
-						player.GetComponent<StatSystem>().substract("health", damage);
-				}*/
-
 				emitter.transform.position += emitter.transform.forward * speed * Time.deltaTime;
 				if (Vector3.Distance(origPos, emitter.transform.position) < distance)
 					yield return null;

@@ -101,6 +101,12 @@ public class Init : NetworkBehaviour
 			{
 				statSystem.addCallback("health", respawn_script.healthWatcher); //sera appelé chaque fois que la valeur de health changera
 			}
+
+			BarreDeVie barreDeVieScript = GetComponentInChildren<BarreDeVie>();
+			if (null != barreDeVieScript)
+			{
+				statSystem.addCallback("health", barreDeVieScript.healthWatcher); //sera appelé chaque fois que la valeur de health changera
+			}
 		}
 	}
 }
