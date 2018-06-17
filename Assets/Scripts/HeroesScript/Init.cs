@@ -96,6 +96,8 @@ public class Init : NetworkBehaviour
 		StatSystem statSystem = GetComponent<StatSystem>();
 		if (null != statSystem)
 		{
+			statSystem.removeAllCallback("health");
+
 			Respawn respawn_script = GetComponent<Respawn>();
 			if (null != respawn_script)
 			{
