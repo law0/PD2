@@ -242,13 +242,5 @@ public class StatSystem : NetworkBehaviour
 			stats[statname].callbackList.Add(callback);
 		}
 	}
-
-	public void removeCallbackByName(string statname)
-	{
-		if (stats.ContainsKey(statname))
-		{
-			stats[statname].callbackList.Clear();
-		}
-	}
 }
 

@@ -27,7 +27,7 @@ public enum AttackType
  * CAST et CIBLEE sont les attaques de lancer
  * CAST lance juste une bullet, CIBLEE lance une bullet qui cherchera une cible
  * NOTE: les "bullets" sont des prefabs à part. Ce sont donc ces bullets qui s'occuperont
- * d'infliger des degats ou de chercher la cible, dans les attaques on se contente de les instancier et les init
+ * d'infliger des degats ou de chercher la cible, ici on se contente de les instancier et les init
  * DASH permet de déplacer le Player d'un point A à un point B rapidos, sans que le Player
  * puisse modifier sa trajectoire en cours de route
  * NOTE: Degat de dash a faire
@@ -91,9 +91,9 @@ public abstract class Attack : MonoBehaviour
 	public KeyCode key;
 
 	//name of animation float trigger
-	public string animFloatName; //on doit bouger les animations autre part
+	public string animFloatName;
 
-	public float animFloat; //on doit bouger les animations autre part
+	public float animFloat;
 
 	//fonction de lancement de l'attaque
 	/*
@@ -103,8 +103,11 @@ public abstract class Attack : MonoBehaviour
 	 * Mais comment lancer l'attaque ?
 	 * Primo, tu remarqueras que cette fonction retourne un IEnumerator
 	 * non pas que c'est fun, mais parce que cette fonction est lancée en coroutine.
-	 * Deucio, hum deuxio! concretement cette fonction est overrided dans les classes filles 
-	 * Selon le type d'attaque, le comportement change obviously
+	 * Deucio, hum deuxio! concretement ca fait juste un switch sur le type de l'attaque, 
+	 * stocké dans la variable...
+	 * -> type <-
+	 * Incroyable :)
+	 * Et selon le type d'attaque, le comportement change obviously
 	 * */
 	public abstract IEnumerator fire(GameObject emitter);
 }

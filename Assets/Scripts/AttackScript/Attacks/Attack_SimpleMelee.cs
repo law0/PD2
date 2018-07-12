@@ -14,7 +14,7 @@ public class Attack_SimpleMelee : Attack
 		get { return AttackType.MELEE; }
 	}
 
-	public float damageRadius = 0.5F; //on doit bouger les animations autre part
+	public float damageRadius = 0.5F;
 
 	public override IEnumerator fire(GameObject emitter)
 	{
@@ -26,7 +26,7 @@ public class Attack_SimpleMelee : Attack
 		// devine ce que ca fait...
 		// bref si tu es dans le radius tu te prends des degats... ouf hein :)
 
-		List<GameObject> melee_playersInRadius = PlayerUtils.GetPlayerIn3DRadius(emitter.transform.position, damageRadius);
+		List<GameObject> melee_playersInRadius = PlayerUtils.getPlayerIn3DRadius(emitter.transform.position, damageRadius);
 		foreach (GameObject player in melee_playersInRadius)
 		{
 			player.GetComponent<StatSystem>().substract("health", damage);
