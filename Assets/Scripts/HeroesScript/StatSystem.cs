@@ -243,7 +243,7 @@ public class StatSystem : NetworkBehaviour
 		}
 	}
 
-	public void removeAllCallback(string statname)
+	public void removeCallbackByName(string statname)
 	{
 		if (stats.ContainsKey(statname))
 		{

@@ -5,10 +5,16 @@ using UnityEngine.Networking;
 
 public class Respawn : NetworkBehaviour {
 
+	public StatSystem statSystem;
+
 	void Start()
 	{
-		
+		if (statSystem)
+		{
+			statSystem.addCallback("health", healthWatcher);
+		}
 	}
+
 	
 	// Update is called once per frame
 	void Update () 
@@ -35,9 +41,9 @@ public class Respawn : NetworkBehaviour {
 		{
 			transform.position = new Vector3(0.0F, 2.0F, 0.0F);
 		}	
-		var statSystem = gameObject.GetComponent<StatSystem>();
-		if (statSystem != null)
-			statSystem.setValue("health", 100); //en cas de respawn remet la valeur a 100
+		var hisStatSystem = gameObject.GetComponent<StatSystem>();
+		if (hisStatSystem != null)
+			hisStatSystem.setValue("health", 100); //en cas de respawn remet la valeur a 100
 		var move = gameObject.GetComponent<Move>();
 		if(null != move)
 			move.stopMove();
@@ -58,7 +64,7 @@ public class Respawn : NetworkBehaviour {
 		Debug.LogWarning("yahoo");
 		//alors oui, ça laisse un gros avantage au gars qui run le server, il peut faire respawn tout le monde...
 		//trouver comment regler ca
-		Init.reinit();
+		NetworkInit.reinit();
 	}
 
 }

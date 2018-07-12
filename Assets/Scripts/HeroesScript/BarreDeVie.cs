@@ -8,6 +8,16 @@ public class BarreDeVie : MonoBehaviour {
 
 	public float vieRealWidth;
 
+	public StatSystem statSystem;
+
+	void Start()
+	{
+		if (statSystem)
+		{
+			statSystem.addCallback("health", healthWatcher);
+		}
+	}
+
 	// Update is called once per frame
 	void Update () 
 	{
