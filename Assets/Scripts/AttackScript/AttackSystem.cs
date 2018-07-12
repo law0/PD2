@@ -26,9 +26,10 @@ public class AttackSystem : NetworkBehaviour {
 	//les attaques sont ici, a remplacer pour chargement "dynamique"
 	private Dictionary<string, Attack> attacks = new Dictionary<string, Attack>();
 
-	/** Huh? WADISTHAT? VASISTAS?
-	 * Dur d'expliquer la... va voir dans Attack.cs c'est expliqué
-	 * Si si allez vas y, je te proooomet
+	/**
+	 * Cette propriété contient l'index du dernier joueur sur lequel on a cliqué
+	 * Elle est setter par ? 
+	 * Et utilisé par les attaques ayant besoin de savoir sur qui on a cliquer genre Attack_SimpleCiblee
 	 * */
 	private int playerClickedIndex = -1;
 	public int PlayerClickedIndex
@@ -44,9 +45,6 @@ public class AttackSystem : NetworkBehaviour {
 	}
 
 	/**
-	 * Ca c'est Awake. Awake je te présente le crétin qui lit, crétin qui lit voici Awake...
-	 * Bonjour, enchanté. Je fais quoi dans la vie? Bah je m'execute quelque temps apres l'instantiation
-	 * de l'objet à laquelle j'appartiens...
 	 * Ha je fais quoi ici? La j'ajoute les components de type Attack déjà présent dans le préfab
 	 * à la liste d'attaque, qui d'ailleurs est un dico plutot
 	 * ... j'ai l'impression que ce jeu est un peu sauvage non?
@@ -91,7 +89,7 @@ public class AttackSystem : NetworkBehaviour {
 				PlayerUtils.LookAtY(gameObject, ref attackDir); //make the passed gameObject (here the player) look at where we click
 
 				//because networkanimator doesn't fuckin sync triggers automatically... and it still bugs
-				entry.Value.animFloat = 1.0F;
+				entry.Value.animFloat = 1.0F;//on doit bouger les animations autre part
 				CmdAttack(entry.Key);
 			}
 			anim.SetFloat(entry.Value.animFloatName, entry.Value.animFloat);
@@ -100,7 +98,6 @@ public class AttackSystem : NetworkBehaviour {
 	}
 
 	/** DO ATTACK NOW!!!
-	 * JE TE COMMMANDE!!! (avec un accent allemand)
 	 * bref toi, dear local player, pour avoir le mot sur tous tes avatars présent chez les autres clients
 	 * Tu dois invoquer cette fonction qui sera:
 	 * Appelée localement
@@ -159,8 +156,7 @@ public class AttackSystem : NetworkBehaviour {
 	 * meme principe que CmdNewStat dans StatSystem
 	 * Oui j'ai la flemme!
 	 * Mais en meme temps c'est Exactement la meme chose que dans StatSystem
-	 * Sauf que dans StatSystem y a pas le truc de serialisation
-	 * donc va voir StatSystem jeune Padawan... allez va voir
+	 * 
 	 * */
 	[Command]
 	public void CmdNewAttack(string attackName, float cooldown, float damage, KeyCode key, string animFloat, float chargeCooldown)
